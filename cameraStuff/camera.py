@@ -1,5 +1,6 @@
 from picamzero import Camera
 from time import sleep
+import os
 
 home_dir = os.environ['HOME'] #set the location of your home directory
 
