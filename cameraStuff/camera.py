@@ -16,6 +16,7 @@ cam.stop_preview()
 
 #RAPID PICTURES test 
 for i in range(3): #use while true loop later
-    cam.take_photo(f"{home_dir}/Desktop/new_image.jpg") #save the image to your desktop
+    cam.take_photo(f"{home_dir}/Desktop/new_image{i}.jpg") #save the image to your desktop
     print("Captured Image "+str(i))
     sleep(0.5) #seconds
+    cam.take_photo()
