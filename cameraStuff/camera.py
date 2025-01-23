@@ -4,4 +4,4 @@ from time import sleep
 cam = Camera()
 cam.start_preview()
 
-sleep(5)
+sleep(10)
