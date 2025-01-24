@@ -7,15 +7,16 @@ home_dir = os.environ['HOME'] #set the location of your home directory
 cam = Camera()
 cam.start_preview() #starts camera preview
 
-"""
-#VIDEO
-cam.start_preview()
-cam.record_video(f"{home_dir}/Desktop/new_video.mp4", duration=5)
-cam.stop_preview()
-"""
-
 #RAPID PICTURES test 
-for i in range(3): #use while true loop later
+
+#settings
+pictureDelayInterval = 0.1 #IN SECONDS 
+numberPicturesTaken = 3 #take 3 pictures
+
+#take a bucnh of pictures:
+for i in range(numberPicturesTaken): #use while true loop later
     cam.take_photo(f"{home_dir}/Desktop/new_image"+str(i)+".jpg") #save the image to your desktop
-    print("Captured Image "+str(i))
-    sleep(0.5) #seconds
+    print("Captured Image: "+str(i))
+    sleep(pictureDelayInterval) #seconds
+
+cam.stop_preview()
