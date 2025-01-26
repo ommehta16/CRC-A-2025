@@ -2,6 +2,7 @@ import cv2
 import time
 from matplotlib import pyplot as plt
 
+import PiCam as camera
 
 def main():
     cam = cv2.VideoCapture(0)
