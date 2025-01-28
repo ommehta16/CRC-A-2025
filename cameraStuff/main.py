@@ -2,21 +2,25 @@ import cv2
 import time
 from matplotlib import pyplot as plt
 
-import PiCam as camera
+import TestCam as camera
+import TestText as ocr
+# ^^ comment out if you're on pi
+
+# 
+# import PiCam as camera
+# import PiText as ocr
+# ^^ comment out if you're not on pi
 
 def main():
-    cam = cv2.VideoCapture(0)
-   
-    res,img = cam.read()
-    for _ in range(1000):
-        if res: break
-        time.sleep(0.01)
-        res,img = cam.read()
-    print(res)
+    img = cv2.imread("sample.jpg")
+    
+    rn = time.time()
+    print(ocr.readText(img))
+    print(f"{time.time()-rn}s")
+
     img = img[:,:,::-1]
     plt.imshow(img,interpolation="bicubic")
     plt.xticks([]); plt.yticks([])
     plt.show()
 
-    # do image processings
 if __name__ == "__main__": main()
