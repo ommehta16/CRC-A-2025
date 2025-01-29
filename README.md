@@ -7,8 +7,14 @@ all things for CRC Amogus in 2025
 <h2>TODO</h2>
 
  - Find and recognize color on wall
- - Test `pytesseract` on pi
+ - Test on pi
  - Make API better
+
+<h2>Letter Detection</h2>
+
+ - OCR using tesseract
+    - kinda broken
+	- lowk just kept popping filters onto it until it worked 🤷‍♂️
 
 <h2>Local Testing</h2>
  

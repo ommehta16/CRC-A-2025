@@ -7,4 +7,4 @@ def readText(img:np.array) -> str:
     txt = reader.readtext(img)
     if (txt is None): return None
 
-    return str(txt[0][1][0]).lower()
+    return str(txt[0][1])
