@@ -2,8 +2,8 @@ import cv2
 import numpy as np
 import pytesseract
 
-pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
-
+#pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+pytesseract.pytesseract.tesseract_cmd = "/bin/tesseract"
 def readText(img:np.array) -> str:
     '''Reads text from the biggest object in the image'''
     gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
