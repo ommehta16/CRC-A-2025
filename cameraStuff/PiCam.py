@@ -1,6 +1,6 @@
 from picamera2 import Picamera2
 
-from picamzero import Camera
+from picamzero import PiCamera
 import numpy as np
 from time import sleep
 import os
