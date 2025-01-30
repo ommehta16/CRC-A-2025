@@ -15,15 +15,6 @@ def getFrame() -> np.ndarray:
     cam = Camera()
     cam.start_preview() #starts camera preview
 
-    #RAPID PICTURES test 
-
-    #settings
-    pictureDelayInterval = 0.1 #IN SECONDS 
-    numberPicturesTaken = 3 #take 3 pictures
-
-
-
-    #take a bucnh of pictures:
 
     #cam.take_photo(f"{home_dir}/Desktop/new_image"+str(i)+".jpg") #save the image to your desktop
         
@@ -35,6 +26,6 @@ def getFrame() -> np.ndarray:
     image = Image.open(memoryStream)
     imageArray = np.array(image) #converts image to array
 
-    print("Captured Image: "+str(i))
+    #print("Captured Image: "+str(i))
 
     return imageArray
