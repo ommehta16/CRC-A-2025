@@ -1,6 +1,23 @@
+from picamera2 import Picamera2
+
 from picamzero import Camera
+import numpy as np
 from time import sleep
 import os
+
+def getFrame() -> np.ndarray:
+    # Derek pls implement this
+
+    # It just has to take a picture and save it to some inbuilt data type (NOT a file pls)
+    # return that datatype once your done
+    
+    # thanks :)
+    
+    return np.zeros([1,1])
+    
+
+
+
 
 home_dir = os.environ['HOME'] #set the location of your home directory
 
