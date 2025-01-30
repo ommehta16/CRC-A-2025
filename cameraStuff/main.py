@@ -2,12 +2,12 @@ import cv2
 import time
 from matplotlib import pyplot as plt
 
-import TestCam as camera
+# import TestCam as camera
 # import TestText as ocr
 # ^^ comment out if you're on pi
 
 # 
-# import PiCam as camera
+import PiCam as camera
 import PiText as ocr
 # ^^ comment out if you're not on pi
 

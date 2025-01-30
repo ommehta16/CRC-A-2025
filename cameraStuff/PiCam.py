@@ -6,13 +6,15 @@ from time import sleep
 import os
 
 from PIL import Image #python imaging library
-import oi #file input stuff
+
+import io #file input stuff
 
 def getFrame() -> np.ndarray:
     
     #home_dir = os.environ['HOME'] #set the location of your home directory
 
-    cam = Camera()
+    cam = Picamera2()
+    
     cam.start_preview() #starts camera preview
 
 
