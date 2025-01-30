@@ -20,3 +20,4 @@ for i in range(numberPicturesTaken): #use while true loop later
     sleep(pictureDelayInterval) #seconds
 
 cam.stop_preview()
+cam.close()
