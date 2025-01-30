@@ -12,8 +12,8 @@ import PiText as ocr
 # ^^ comment out if you're not on pi
 
 def main():
-    # img = camera.getFrame()
-    img = cv2.imread("sample1.jpg")
+    img = camera.getFrame()
+    # img = cv2.imread("sample1.jpg")
 
     edges = cv2.Canny(cv2.GaussianBlur(img,[3,3],sigmaX=0.3,sigmaY=0.3),150,200)
 
