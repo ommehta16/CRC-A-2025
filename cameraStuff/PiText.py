@@ -11,18 +11,24 @@ def readText(img:np.array) -> str:
     
     rect_kernel = cv2.getStructuringElement(cv2.MORPH_RECT,(18,18))
     
-    edges = cv2.Canny(cv2.GaussianBlur(img,[3,3],sigmaX=0.3,sigmaY=0.3),150,200)
+    edges = cv2.Canny(cv2.GaussianBlur(img,[3,3],sigmaX=0.1,sigmaY=0.1),100,100)
     dilation = cv2.dilate(edges,rect_kernel,iterations=1)
     contours, hierarchy = cv2.findContours(dilation, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
     
-    plt.imshow(dilation,interpolation="bicubic")
+    plt.imshow(img,interpolation="bicubic")
     plt.xticks([]); plt.yticks([])
+    plt.show()
 
     plt.imshow(edges,interpolation="bicubic")
     plt.xticks([]); plt.yticks([])
-
-    plt.imshow(contours,interpolation="bicubic")
+    plt.show()
+    
+        plt.imshow(edges,interpolation="bicubic")
     plt.xticks([]); plt.yticks([])
+    plt.show()
+
+    #plt.imshow(contours,interpolation="bicubic")
+    #plt.xticks([]); plt.yticks([])
 
     gooderContours = []
     for contour in contours:
