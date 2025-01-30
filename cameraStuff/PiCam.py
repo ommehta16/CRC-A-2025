@@ -1,6 +1,5 @@
-from picamera2 import Picamera2
+from picamera2 import Picamera2, Preview
 
-from picamzero import Camera
 import numpy as np
 from time import sleep
 import os
@@ -14,7 +13,6 @@ def getFrame() -> np.ndarray:
     #home_dir = os.environ['HOME'] #set the location of your home directory
 
     cam = Picamera2()
-    
     cam.start_preview() #starts camera preview
 
 
