@@ -17,7 +17,7 @@ def getFrame() -> np.ndarray:
     cam.start()
     # cam.start_preview() #starts camera preview
     sleep(0.1)
-    return cam.capture_image('main')
+    return np.array(cam.capture_image('main'))
 
     #cam.take_photo(f"{home_dir}/Desktop/new_image"+str(i)+".jpg") #save the image to your desktop
         
