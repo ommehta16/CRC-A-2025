@@ -12,7 +12,7 @@ def getFrame() -> np.ndarray:
     
     #home_dir = os.environ['HOME'] #set the location of your home directory
 
-    cam = Camera()
+    cam = PiCamera()
     cam.start_preview() #starts camera preview
 
 
