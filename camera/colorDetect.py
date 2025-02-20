@@ -17,6 +17,7 @@ SAT_THRESH = 0.5
 VAL_THRESH = 0.3
 
 def getColor(image:np.ndarray) -> str:
+    img = img[:,:,::-1]
     '''
     `image` is an image
 
