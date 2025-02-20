@@ -4,13 +4,13 @@ from matplotlib import pyplot as plt
 import colorDetect
 
 
-import TestCam as camera
-import TestText as ocr
+# import TestCam as camera
+# import TestText as ocr
 # ^^ comment out if you're on pi
 
 # 
-# import PiCam as camera
-# import PiText as ocr
+import PiCam as camera
+import PiText as ocr
 # ^^ comment out if you're not on pi
 
 def main():
