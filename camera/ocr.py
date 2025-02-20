@@ -12,15 +12,15 @@ def readText(img:np.array) -> str:
     dilation = cv2.dilate(edges,rect_kernel,iterations=1)
     contours, hierarchy = cv2.findContours(dilation, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
     
-    # plt.imshow(img,interpolation="bicubic")
-    # plt.xticks([])
-    # plt.yticks([])
-    # plt.show()
+    plt.imshow(img,interpolation="bicubic")
+    plt.xticks([])
+    plt.yticks([])
+    plt.show()
 
-    # plt.imshow(edges,interpolation="bicubic")
-    # plt.xticks([])
-    # plt.yticks([])
-    # plt.show()
+    plt.imshow(edges,interpolation="bicubic")
+    plt.xticks([])
+    plt.yticks([])
+    plt.show()
 
     gooderContours = []
     for contour in contours:
