@@ -48,7 +48,7 @@ def getColor(image:np.ndarray) -> str:
 
     sat = (max(r,g,b)-min(r,g,b))/max(r,g,b)
 
-    # if (sat < SAT_THRESH or max(r,g,b) < VAL_THRESH): return None
+    if (sat < SAT_THRESH or max(r,g,b) < VAL_THRESH): return None
     hue *= 60
 
     # just get the closest named color
@@ -62,6 +62,5 @@ def getColor(image:np.ndarray) -> str:
     print(f"g:{g}")
     print(f"b:{b}")
 
-    # if closest_color in ["red","yellow","green"]: 
-    return closest_color
+    if closest_color in ["red","yellow","green"]: return closest_color
     return None
