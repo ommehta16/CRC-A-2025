@@ -25,10 +25,10 @@ def readText(img:np.array) -> str:
     plt.yticks([])
     plt.show()
     
-    plt.imshow(edges,interpolation="bicubic")
-    plt.xticks([])
-    plt.yticks([])
-    plt.show()
+    # plt.imshow(edges,interpolation="bicubic")
+    # plt.xticks([])
+    # plt.yticks([])
+    # plt.show()
 
     #plt.imshow(contours,interpolation="bicubic")
     #plt.xticks([]); plt.yticks([])
