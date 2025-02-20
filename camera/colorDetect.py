@@ -26,7 +26,7 @@ def getColor(image:np.ndarray) -> str:
     w = image.shape[0]
     h = image.shape[1]
 
-    # cv2.rectangle( image, (int(0.4*h) , int(0.4*w)), (int(0.6*h) , int(0.6*w)), (0,255,0) )
+    cv2.rectangle( image, (int(0.4*h) , int(0.4*w)), (int(0.6*h) , int(0.6*w)), (0,255,0) )
     middle = image[ int(0.4*w):int(0.6*w), int(0.4*h):int(0.6*h) ]
 
     # ok so average middle
