@@ -56,7 +56,10 @@ def getColor(image:np.ndarray) -> str:
         if abs(COLORS[color]-hue) < abs(COLORS[closest_color]-hue): closest_color = color
     if closest_color == "red1": closest_color = "red"
     
-    print(hue, sat, )
+    print(hue, sat)
+    print(f"r:{r}")
+    print(f"g:{g}")
+    print(f"b:{b}")
 
     # if closest_color in ["red","yellow","green"]: 
     return closest_color
