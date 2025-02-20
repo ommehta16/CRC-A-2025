@@ -5,11 +5,12 @@ from matplotlib import pyplot as plt
 
 #pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 pytesseract.pytesseract.tesseract_cmd = "/bin/tesseract"
-def readText(img:np.array) -> str:
+def readText(img) -> str:
     '''Reads text from the biggest object in the image'''
     # gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     
     # rect_kernel = cv2.getStructuringElement(cv2.MORPH_RECT,(18,18))
+    
     
     # edges = cv2.Canny(cv2.GaussianBlur(img,[3,3],sigmaX=0.1,sigmaY=0.1),100,100)
     # dilation = cv2.dilate(edges,rect_kernel,iterations=1)
@@ -37,4 +38,4 @@ def readText(img:np.array) -> str:
     # _, x, y, w, h = gooderContours[-1]
     # a = pytesseract.image_to_string(img[y:y+h,x:x+w],lang='eng',config="--psm 10")
 
-    return pytesseract.image_to_string(img,lang='eng',config="--psm 3")
+    return pytesseract.image_to_string(img,lang='eng',config="--psm 6")

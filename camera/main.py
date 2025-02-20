@@ -15,7 +15,9 @@ import PiText as ocr
 
 def main():
     img = camera.getFrame()
-    # img = cv2.imread(f"testimgs/sample.jpg")
+    
+    # cv2.imwrite("derk.jpg",img)
+    #img = cv2.imread(f"derk.jpg")
 
     img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
     rn = time.time()
