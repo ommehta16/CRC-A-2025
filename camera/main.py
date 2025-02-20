@@ -19,10 +19,10 @@ def main():
 
     img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
     rn = time.time()
-    print(ocr.readText(img))
-    print(f"{time.time()-rn}s")
+    print("TEXT:",ocr.readText(img))
+    print(f"\nTook {time.time()-rn}s")
 
-    print(colorDetect.getColor(img))
+    print("COLOR:", colorDetect.getColor(img))
     img = img[:,:,::-1]
 
     plt.imshow(img,interpolation="bicubic")
