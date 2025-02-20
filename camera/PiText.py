@@ -25,16 +25,16 @@ def readText(img:np.array) -> str:
     plt.yticks([])
     plt.show()
 
-    gooderContours = []
-    for contour in contours:
-        x,y,w,h = cv2.boundingRect(contour)
+    # gooderContours = []
+    # for contour in contours:
+    #     x,y,w,h = cv2.boundingRect(contour)
 
-        rect = cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        gooderContours.append((w*h, x, y, w, h))
+    #     rect = cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    #     gooderContours.append((w*h, x, y, w, h))
 
-    gooderContours.sort()
+    # gooderContours.sort()
 
-    _, x, y, w, h = gooderContours[-1]
-    a = pytesseract.image_to_string(img[y:y+h,x:x+w],lang='eng',config="--psm 10")
+    # _, x, y, w, h = gooderContours[-1]
+    # a = pytesseract.image_to_string(img[y:y+h,x:x+w],lang='eng',config="--psm 10")
 
-    return a
+    return pytesseract.image_to_string(img,lang='eng',config="--psm 11")
