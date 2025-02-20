@@ -5,12 +5,12 @@ import colorDetect
 import ocr
 
 
-import TestCam as camera
+# import TestCam as camera
 # import TestText as ocr
 # ^^ comment out if you're on pi
 
 # 
-# import PiCam as camera
+import PiCam as camera
 # import PiText as ocr
 # ^^ comment out if you're not on pi
 
