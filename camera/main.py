@@ -15,8 +15,8 @@ import TestCam as camera
 # ^^ comment out if you're not on pi
 
 def main():
-    img = cv2.imread("you.jpg")
-    # img = camera.getFrame()
+    #img = cv2.imread("you.png")
+    img = camera.getFrame()
 
     img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
 
