@@ -24,7 +24,7 @@ def main():
     # print(f"{time.time()-rn}s")
 
     print(colorDetect.getColor(img))
-    # img = img[:,:,::-1]
+    img = img[:,:,::-1]
 
     plt.imshow(img,interpolation="bicubic")
     plt.xticks([]); plt.yticks([])
