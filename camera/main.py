@@ -15,13 +15,12 @@ import PiText as ocr
 
 def main():
     img = camera.getFrame()
-    # filename = "sample.jpg"
-    # img = cv2.imread(f"testimgs/{filename}")
+    # img = cv2.imread(f"testimgs/sample.jpg")
 
     img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
-    # rn = time.time()
-    # print(ocr.readText(img))
-    # print(f"{time.time()-rn}s")
+    rn = time.time()
+    print(ocr.readText(img))
+    print(f"{time.time()-rn}s")
 
     print(colorDetect.getColor(img))
     img = img[:,:,::-1]
