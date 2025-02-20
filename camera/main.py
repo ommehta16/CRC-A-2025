@@ -15,8 +15,8 @@ import TestCam as camera
 # ^^ comment out if you're not on pi
 
 def main():
-    #img = cv2.imread("you.png")
-    img = camera.getFrame()
+    img = cv2.imread("you.png")
+    # img = camera.getFrame()
 
     img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
 
@@ -24,7 +24,7 @@ def main():
     # cv2.imwrite("you.png",img)
     # print("COLOR:", colorDetect.getColor(img))
 
-    img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+    # img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
     plt.imshow(img,interpolation="bicubic")
     plt.xticks([]); plt.yticks([])

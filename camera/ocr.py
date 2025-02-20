@@ -2,32 +2,50 @@ import numpy as np
 from matplotlib import pyplot as plt
 import cv2
 
+DILATE_AMT = 25
+
 def readText(img:np.array) -> str:
-    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    dilation, text_aabbs = split_img(img)
+
+    '''
+    OK SO WHAT IM THINKING RN
+
+    we have it chopped up into aabbs (axis aligned bounding box)
+
+    aabbs is normally bad, but here is good
     
-    rect_kernel = cv2.getStructuringElement(cv2.MORPH_RECT,(18,18))
+    THEN
+
+    we find out the lines in the image
+
+    root them to one pixel
+
+    and compare it to pre-made list of lines for characters
+
+    if its similar ish we say its that
+
+    idk if this is good strat tho
+    '''
+    return ""
     
+def split_img(img:np.array) -> tuple[np.array, list[tuple]]:
+    rect_kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(DILATE_AMT,DILATE_AMT))
     
     edges = cv2.Canny(cv2.GaussianBlur(img,[3,3],sigmaX=0.1,sigmaY=0.1),100,100)
     dilation = cv2.dilate(edges,rect_kernel,iterations=1)
     contours, hierarchy = cv2.findContours(dilation, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
-    
-    plt.imshow(img,interpolation="bicubic")
+
+    plt.imshow(dilation,interpolation="bicubic")
     plt.xticks([])
     plt.yticks([])
     plt.show()
 
-    plt.imshow(edges,interpolation="bicubic")
-    plt.xticks([])
-    plt.yticks([])
-    plt.show()
-
-    gooderContours = []
+    # cv2.drawContours(img,contours,-1,(255,0,0),2)
+    text_aabbs = []
     for contour in contours:
         x,y,w,h = cv2.boundingRect(contour)
 
         rect = cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        gooderContours.append((w*h, x, y, w, h))
-
-
-    return ""
+        text_aabbs.append((x, y, w, h))
+    
+    return dilation, text_aabbs
