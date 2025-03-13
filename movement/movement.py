@@ -22,14 +22,13 @@ GPIO.setup(motorB2, GPIO.OUT)
 GPIO.setup(motorBpwm, GPIO.OUT)
 pwmA = GPIO.PWM(motorApwm, 25000)
 pwmB = GPIO.PWM(motorBpwm, 25000)
-
+pwmA.ChangeDutyCycle(0)
+pwmB.ChangeDutyCycle(0) 
 pwmA.start(0)
 pwmB.start(0)
 
 
-def drive(direction,speed): #forward, backwards
-    pwmA.ChangeDutyCycle(speed)
-    pwmB.ChangeDutyCycle(speed) 
+def drive(direction): #forward, backwards
     if (direction=='forward'):
         GPIO.output(motorA1, GPIO.HIGH)
         GPIO.output(motorA2, GPIO.LOW)
@@ -41,6 +40,13 @@ def drive(direction,speed): #forward, backwards
         GPIO.output(motorA2, GPIO.HIGH)
         GPIO.output(motorB1, GPIO.LOW)
         GPIO.output(motorB2, GPIO.HIGH)
+    
+
+def driveSpeed(speed):
+    pwmA.ChangeDutyCycle(speed)
+    pwmB.ChangeDutyCycle(speed)
+
+
     
 
 
