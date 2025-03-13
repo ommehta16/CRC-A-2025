@@ -14,18 +14,18 @@ def readText(img:np.array) -> str:
 
     aabbs is normally bad, but here is good
     
-    THEN
+    ok how about this
 
-    we find out the lines in the image
+    take whats in the aabbs
 
-    root them to one pixel
+    and train neural net based on that
 
-    and compare it to pre-made list of lines for characters
+    HOW?
 
-    if its similar ish we say its that
+    
 
-    idk if this is good strat tho
     '''
+    
     return ""
     
 def split_img(img:np.array) -> tuple[np.array, list[tuple]]:
