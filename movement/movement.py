@@ -74,5 +74,12 @@ def turn(direction):
     pwmA.ChangeDutyCycle(turnSpeed)
     pwmB.ChangeDutyCycle(turnSpeed)
 
-
-
+if __name__ == "__main__":
+    drive("forward")
+    sleep(0.1)
+    stop()
+    drive('backward')
+    sleep(0.1)
+    turn('right')
+    sleep(0.1)
+    turn('left')
