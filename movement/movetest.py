@@ -6,12 +6,12 @@ from time import sleep
 
 
 #Pins for Motor Drivers
-motorA1 = 29
-motorA2 = 31
-motorApwm = 33
-motorB1 = 38
-motorB2 = 40
-motorBpwm = 35
+motorA1 = 18
+motorA2 = 16
+motorApwm = 22
+motorB1 = 10
+motorB2 = 8
+motorBpwm = 12
 
 #setup
 

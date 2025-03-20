@@ -5,12 +5,12 @@ from time import sleep
 
 
 #Pins for Motor Drivers
-motorA1 = 29
-motorA2 = 31
-motorApwm = 33
-motorB1 = 38
-motorB2 = 40
-motorBpwm = 35
+motorA1 = 18
+motorA2 = 16
+motorApwm = 22
+motorB1 = 10
+motorB2 = 8
+motorBpwm = 12
 
 #setup
 GPIO.setmode(GPIO.BOARD)
@@ -24,10 +24,10 @@ pwmA = GPIO.PWM(motorApwm, 25000)
 pwmB = GPIO.PWM(motorBpwm, 25000)
 pwmA.ChangeDutyCycle(0)
 pwmB.ChangeDutyCycle(0) 
-pwmA.start(0)
-pwmB.start(0)
-driveSpeed = 0
-turnSpeed = 0
+pwmA.start(40)
+pwmB.start(40)
+driveSpeed = 40
+turnSpeed = 40
 
 def drive(direction): #forward, backwards
     if (direction=='forward'):
@@ -41,6 +41,8 @@ def drive(direction): #forward, backwards
         GPIO.output(motorA2, GPIO.HIGH)
         GPIO.output(motorB1, GPIO.LOW)
         GPIO.output(motorB2, GPIO.HIGH)
+    pwmA.ChangeDutyCycle(driveSpeed)
+    pwmB.ChangeDutyCycle(driveSpeed)
     
 
 def changeDriveSpeed(speed):
@@ -61,12 +63,12 @@ def stop():
     pwmB.ChangeDutyCycle(0)
 
 def turn(direction):
-    if direction == 'left':
+    if direction == 'right':
         GPIO.output(motorA1, GPIO.LOW)
         GPIO.output(motorA2, GPIO.HIGH)
         GPIO.output(motorB1, GPIO.HIGH)
         GPIO.output(motorB2, GPIO.LOW)
-    elif direction == 'right':
+    elif direction == 'left':
         GPIO.output(motorA1, GPIO.HIGH)
         GPIO.output(motorA2, GPIO.LOW)
         GPIO.output(motorB1, GPIO.LOW)
@@ -74,12 +76,14 @@ def turn(direction):
     pwmA.ChangeDutyCycle(turnSpeed)
     pwmB.ChangeDutyCycle(turnSpeed)
 
-if __name__ == "__main__":
-    drive("forward")
-    sleep(0.1)
-    stop()
-    drive('backward')
-    sleep(0.1)
-    turn('right')
-    sleep(0.1)
-    turn('left')
+
+drive('forward')
+sleep(5)
+stop()
+sleep(1)
+drive('backward')
+sleep(5)
+turn('right')
+sleep(5)
+turn('left')
+sleep(5)
