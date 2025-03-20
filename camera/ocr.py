@@ -21,13 +21,12 @@ def readText(img:np.array) -> str:
     and train neural net based on that
 
     HOW?
-
-    
-
     '''
     
     return ""
-    
+
+
+
 def split_img(img:np.array) -> tuple[np.array, list[tuple]]:
     rect_kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(DILATE_AMT,DILATE_AMT))
     
