@@ -26,7 +26,8 @@ pwmA.ChangeDutyCycle(0)
 pwmB.ChangeDutyCycle(0) 
 pwmA.start(0)
 pwmB.start(0)
-
+driveSpeed = 0
+turnSpeed = 0
 
 def drive(direction): #forward, backwards
     if (direction=='forward'):
@@ -42,12 +43,36 @@ def drive(direction): #forward, backwards
         GPIO.output(motorB2, GPIO.HIGH)
     
 
-def driveSpeed(speed):
-    pwmA.ChangeDutyCycle(speed)
-    pwmB.ChangeDutyCycle(speed)
+def changeDriveSpeed(speed):
+    driveSpeed = speed
+    pwmA.ChangeDutyCycle(driveSpeed)
+    pwmB.ChangeDutyCycle(driveSpeed)
+
+def changeTurnSpeed(speed):
+    turnSpeed = speed
 
 
-    
+def stop():
+    GPIO.output(motorA1, GPIO.LOW)
+    GPIO.output(motorA2, GPIO.LOW)
+    GPIO.output(motorB1, GPIO.LOW)
+    GPIO.output(motorB2, GPIO.LOW)
+    pwmA.ChangeDutyCycle(0)
+    pwmB.ChangeDutyCycle(0)
+
+def turn(direction):
+    if direction == 'left':
+        GPIO.output(motorA1, GPIO.LOW)
+        GPIO.output(motorA2, GPIO.HIGH)
+        GPIO.output(motorB1, GPIO.HIGH)
+        GPIO.output(motorB2, GPIO.LOW)
+    elif direction == 'right':
+        GPIO.output(motorA1, GPIO.HIGH)
+        GPIO.output(motorA2, GPIO.LOW)
+        GPIO.output(motorB1, GPIO.LOW)
+        GPIO.output(motorB2, GPIO.HIGH)
+    pwmA.ChangeDutyCycle(turnSpeed)
+    pwmB.ChangeDutyCycle(turnSpeed)
 
 
 
