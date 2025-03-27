@@ -140,14 +140,3 @@ def turn(direction):
     pwmA.ChangeDutyCycle(turnSpeed)
     pwmB.ChangeDutyCycle(turnSpeed)
 
-
-drive('forward')
-sleep(5)
-stop()
-sleep(1)
-drive('backward')
-sleep(5)
-turn('right')
-sleep(5)
-turn('left')
-sleep(5)
