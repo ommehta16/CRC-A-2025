@@ -1,8 +1,51 @@
 # just make a lil api to have motors go for a bit
 
 import RPi.GPIO as GPIO
+import time
 from time import sleep
+import multiprocessing as mp
+import multiprocessing.connection as connection
 
+TIME_INCREMENT:float = 0.5
+MAX_PULL_WAIT:float = 5
+
+def test():
+    '''
+    do a dance or smht idk bro
+    '''
+
+def run(conn: connection.Connection):
+    '''
+    conn is a mp connection: we only need to pull data from it (it's like queue of data -- assume that it comes from a magical void)
+    '''    
+    lastPull = time.time()
+    
+    command = "sit"
+
+    while True: # main loop
+        now = time.time()
+
+        while conn.poll() and (time.time()-now < TIME_INCREMENT or now-lastPull >= MAX_PULL_WAIT):
+            lastPull = time.time()
+            newData = conn.recv()
+
+            if type(newData) is str: # command, time
+                command = newData
+            if type(newData) is tuple[int, float]:
+                '''
+                We'll need this later, but maybe start now?
+
+                newData[0] == 0 --> stop
+                newData[0] == 1 --> go forwards newData[1] cm
+                newData[0] == 2 --> turn until facing at heading newData[0] degrees
+                
+                '''
+                ...
+        '''
+        Do what command says to do here
+        '''
+
+        sleep(max(0,now+TIME_INCREMENT-time.time())) # just wait a bit so we dont go too fast
 
 #Pins for Motor Drivers
 motorA1 = 18
