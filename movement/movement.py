@@ -11,8 +11,29 @@ MAX_PULL_WAIT:float = 5
 
 def test():
     '''
-    do a dance or smht idk bro
+    dance
     '''
+    turn("left")
+    sleep(0.5)
+    stop()
+    for i in range(3):
+        turn("right") 
+        sleep(1)
+        stop()
+        turn("left")
+        sleep(1)
+        stop()
+    
+    turn("right")
+    sleep(0.5)
+    stop()
+    drive('forward')
+    sleep(1)
+    stop()
+    drive('backward')
+    sleep(1)
+    stop()
+
 
 def run(conn: connection.Connection):
     '''
