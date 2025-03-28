@@ -53,14 +53,25 @@ def run(conn: connection.Connection):
             if type(newData) is str: # command, time
                 command = newData
             if type(newData) is tuple[int, float]:
-                '''
-                We'll need this later, but maybe start now?
+                command,value = newData
 
-                newData[0] == 0 --> stop
-                newData[0] == 1 --> go forwards newData[1] cm
-                newData[0] == 2 --> turn until facing at heading newData[0] degrees
+                if (command==0):
+                    stop()
                 
-                '''
+                elif (command==1): #DRIVE COMMAND (positive is forward, negative is backwards) has no effect on speed
+                    if (value>1):
+                        drive('forward')
+                    else:
+                        drive('backward')
+                
+                elif (command==2):
+                    turnDegrees(value)
+                
+                elif (command==3):
+                    changeDriveSpeed(value)
+                
+                elif (command==4):
+                    changeTurnSpeed(value)
                 ...
         '''
         Do what command says to do here
@@ -139,4 +150,9 @@ def turn(direction):
         GPIO.output(motorB2, GPIO.HIGH)
     pwmA.ChangeDutyCycle(turnSpeed)
     pwmB.ChangeDutyCycle(turnSpeed)
+
+def turnDegrees(degrees):
+    #magnometer pro
+    #do this later
+    pass
 
