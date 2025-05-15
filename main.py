@@ -1,5 +1,5 @@
 from sensors import color, distance
-from movement import movement, routing
+# from movement. import movement, routing
 import multiprocessing as mp
 import multiprocessing.connection as connection
 import time
@@ -13,9 +13,9 @@ TIME_INCREMENT:float = 0.5
 START:float          = time.time()
 MAX_PULL_WAIT:float  = 5
 
-move, tmp = mp.Pipe() #tmp is the other end of the pipe, so we can forget it
-move_prc = mp.Process(target=movement.run, args=(tmp, ))
-del tmp
+# move, tmp = mp.Pipe() #tmp is the other end of the pipe, so we can forget it
+# move_prc = mp.Process(target=movement.run, args=(tmp, ))
+# del tmp
 
 GRID_SIZE = (100,100)
 
@@ -71,20 +71,20 @@ def main():
     while True:
         now:float = time.time()
     
-        while move.poll() and (time.time()-now < TIME_INCREMENT or now-lastPull >= MAX_PULL_WAIT):
-            lastPull = time.time()
-            newData = move.recv()
-            '''
-            get data from move for how far we've gone since last turn (in tiles, preferrably)
-            '''
+        # while move.poll() and (time.time()-now < TIME_INCREMENT or now-lastPull >= MAX_PULL_WAIT):
+        #     lastPull = time.time()
+        #     newData = move.recv()
+        #     '''
+        #     get data from move for how far we've gone since last turn (in tiles, preferrably)
+        #     '''
 
-            # newData is literally just the delta height lol
+        #     # newData is literally just the delta height lol
 
-            if type(newData) != int:
-                print("tf is tjis?")
-                continue
+        #     if type(newData) != int:
+        #         print("tf is tjis?")
+        #         continue
 
-            delta_height = newData
+        #     delta_height = newData
 
         '''
         ROUTING stuff needs to go here

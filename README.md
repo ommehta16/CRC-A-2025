@@ -2,42 +2,31 @@
 
 all things for CRC Amogus in 2025
 
-<h1>CAMERA</h1>
+## TODO
 
-<h2>TODO</h2>
+- write the damn code
 
- - Find and recognize color on wall
- - Test on pi
- - Make API better
+## RUNNING
 
-<h2>Letter Detection</h2>
+- `python3 main.py`
+- preferabbly, you run this as an always-on process on an rpi
+- you NEED to have the motors connected for this to work (duh)
 
- - OCR using tesseract
-    - kinda broken
-	- lowk just kept popping filters onto it until it worked 🤷‍♂️
+## CAMERA
 
-<h2>Local Testing</h2>
- 
- - OCR code in `TestText.py`
- - Camera driver in `TestCam.py`
+### OCR
 
-<h2>Deployment</h2>
- 
- - OCR code in `PiText.py`
- - Camera driver in `TestCam.py`
+### Color Recognition
 
-<h1>MOVEMENT</h1>
+## Movement
 
-<h2>TODO</h2>
+## DEPENDENCIES
 
- - Make a to-do list
+We only have a few dependencies, and most of them should already be installed.
+What you *do* need to install is:
 
-<h1>DEPENDENCIES</h1>
- 
- - opencv: `pip install opencv-python`
- - picamzero: `pip install picamzero`
- - easyocr: `pip install easyocr`
+- opencv: `pip install opencv-python`
+- picamzero: `pip install picamzero`
+- easyocr: `pip install easyocr`
 
-sus
-skibidi
-hkjefd
+The rest should be pre-installed with python. If they aren't, you need `multiprocessing`, `time`, `numpy`, [whatever you used for color recognition idek @PhantomFrenzy151 ??]

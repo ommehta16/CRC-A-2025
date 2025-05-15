@@ -1,7 +1,15 @@
 '''
 The algorithim at its core, as pseudocode for now
 
+DONT USE THIS FILE
 
+PLS PUT STUFF IN CRC-A-2025/main.py
+plsplsplps
+
+this way its like synced and all
+
+the point of having git is that we don't need to version control with copies
+dslafhjlsahjfkhdsakjhfkaj
 '''
 
 
