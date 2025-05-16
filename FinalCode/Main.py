@@ -1,11 +1,23 @@
 '''
 The algorithim at its core, as pseudocode for now
+<<<<<<< HEAD
 '''
 import time
 from multiprocessing import Process, Queue, Event, set_start_method
 from Camera import producer
 from DetectRectColor import detector, consumer
+=======
 
+DONT USE THIS FILE
+>>>>>>> refs/remotes/origin/main
+
+PLS PUT STUFF IN CRC-A-2025/main.py
+plsplsplps
+
+this way its like synced and all
+
+the point of having git is that we don't need to version control with copies
+dslafhjlsahjfkhdsakjhfkaj
 '''
 #everything should go in a try finally, with cleanup processes in the except keyboard interrupt
 if __name__ == "__main__":
