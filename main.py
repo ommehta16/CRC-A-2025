@@ -1,13 +1,14 @@
 from sensors import color, distance
-# from movement. import movement, routing
 import multiprocessing as mp
 import multiprocessing.connection as connection
 import time
 import numpy as np
 import heapq
-
-# from camera import PiCam as camera
-# from camera import PiText as ocr
+from position import position
+from movement import movement
+import asyncio
+from collections import deque
+import sys
 
 TIME_INCREMENT:float = 0.5
 START:float          = time.time()
@@ -29,62 +30,27 @@ OFFSETS = [
     [-1,0],
 ]
 
+visited = np.zeros(GRID_SIZE).astype(bool)
 accessible = np.zeros((GRID_SIZE[0],GRID_SIZE[1],4)).astype(bool)
 '''
 `accessible[i][j]` tells us which directions we can go from cell (i,j)
 
-`accessible[i][j][0]` --> right
-`accessible[i][j][1]` --> bottom
-`accessible[i][j][2]` --> left
-`accessible[i][j][3]` --> top
+`accessible[i][j][0]` --> right\n
+`accessible[i][j][1]` --> bottom\n
+`accessible[i][j][2]` --> left\n
+`accessible[i][j][3]` --> top\n
 
 so if `accessible[i][j][2]` and `accessible[i][j][3]`, we can access `(i,j-1)` and `(i-1,j)`
 '''
 
-'''
-OK FOR MESSAGES
 
-We're just going to send in json format bc im lazy af
+curr = position(50,50,0,0)
 
-{
-    "variable": value,
-    "error": "none"
-}
-
-if no error ^^
-
-if there is some error, 
-
-{
-    "error": anything other than none
-}
-
-the error only rly exists if we're doing requests... we probs aren't anyways, BUT leave error there just in case
-
-'''
-
-curr = (50,50)
-direction = [0,1]
-height = 0
 
 def main():
     while True:
         now:float = time.time()
     
-        # while move.poll() and (time.time()-now < TIME_INCREMENT or now-lastPull >= MAX_PULL_WAIT):
-        #     lastPull = time.time()
-        #     newData = move.recv()
-        #     '''
-        #     get data from move for how far we've gone since last turn (in tiles, preferrably)
-        #     '''
-
-        #     # newData is literally just the delta height lol
-
-        #     if type(newData) != int:
-        #         print("tf is tjis?")
-        #         continue
-
-        #     delta_height = newData
 
         '''
         ROUTING stuff needs to go here
@@ -94,14 +60,70 @@ def main():
          - so weighted BFS --> literally just djikstra what :sob:
         '''
 
-        # DJIKSTRA HERE
-
-        a = []
-        heapq.heapify(a)
-
         # what do we want to do -- explore or ??
 
-        # move.send({"turn":"right"})
         time.sleep(max(TIME_INCREMENT - float(time.time()-now),0))
+
+def closest_unvisited():
+    global curr, accessible, height
+
+    # BFS for closest unvisited
+
+    bfs:deque[position] = deque()
+
+    bfs.appendleft(curr)
+    seen = set()
+    came_from:dict[position, position] = dict()
+
+    to_visit = None
+        
+    while len(bfs):
+        rn = bfs.pop()
+        
+        if visited[round(rn.x), round(rn.y)]:
+            to_visit = rn
+        for dir in range(4):
+            nxt = rn + OFFSETS[dir]
+            seen.add(nxt)
+            if accessible[round(rn.x), round(rn.y), dir]:
+                came_from[nxt] = rn
+                bfs.appendleft(nxt)
+    
+    if to_visit == None:
+        go_home() 
+
+def go_home():
+    # bfs for shortest path home
+    
+
+    # execute shortest path home
+
+    print("home!")
+    sys.exit(0)
+
+
+def nextMove():
+    global curr, accessible, height
+    x, y = round(curr.x), round(curr.y)
+    nxt = curr + OFFSETS[curr.dir]
+    if accessible[x,y,curr.dir] and not visited[round(nxt.x), round(nxt.y)]:
+        asyncio.create_task(movement.move_one_tile())
+        visited[round(nxt.x), round(nxt.y)] = True
+        return
+    dir = (curr.dir+1)%4
+    while dir != curr.dir:
+        nxt = curr+OFFSETS[dir]
+        if accessible[x,y,dir] and not visited[round(nxt.x), round(nxt.y)]:
+            asyncio.create_task(movement.rotate(dir - curr.dir))
+            time.sleep(0.01) #hopefully figures out the rotation
+            asyncio.create_task(movement.move_one_tile())
+            visited[round(nxt.x), round(nxt.y)] = True
+            return
+        dir = (dir+1)%4
+    closest_unvisited()
+    
+    
+
+
 
 if __name__ == "__main__": main()

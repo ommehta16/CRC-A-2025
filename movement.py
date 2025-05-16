@@ -113,6 +113,18 @@ class movement:
         global driveSpeed
         driveSpeed = to
 
+    @staticmethod
+    async def move_one_tile() -> None:
+        '''BRANDEN PLS IMPLEMENT THIS!!!'''
+        # raise NotImplementedError()
+
+    @staticmethod
+    async def rotate(by:int) -> None:
+        '''BRANDEN PLS IMPLEMENT THIS AS WELL'''
+        
+        # just turn the bot by `by` 90 degree rotations (+3 --> 3 turns right, -3 --> 3 turns left)
+        #
+
 def test():
     print("forwards")
     asyncio.run(movement.drive(1))
