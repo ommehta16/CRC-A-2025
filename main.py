@@ -19,10 +19,6 @@ TIME_INCREMENT:float = 0.5
 START:float          = time.time()
 MAX_PULL_WAIT:float  = 5
 
-# move, tmp = mp.Pipe() #tmp is the other end of the pipe, so we can forget it
-# move_prc = mp.Process(target=movement.run, args=(tmp, ))
-# del tmp
-
 GRID_SIZE = (100,100)
 
 floor = np.zeros(GRID_SIZE).astype(int)
@@ -62,6 +58,8 @@ curr = position(50,50,0,0)
 def main():
     print("started")
     while True:
+        todo = asyncio.all_tasks()
+        asyncio.run(asyncio.wait(*todo,timeout=10)) # finish up any outstanding tasks from previous move here
         now:float = time.time()
         # grab color data from consumer here
         while not color_queue.empty():
@@ -157,37 +155,44 @@ def go_home():
         to_visit = came_from[to_visit]
 
     while len(path):
-        vec_to = path[-1]-curr
-        necessary_dir = OFFSETS.index([round(vec_to.x),round(vec_to.y)])
-
-        asyncio.run(movement.rotate(necessary_dir-curr.dir))
-        asyncio.run(movement.move_tiles(1))
+        visit(path[-1])
         curr = path[-1]
         path.pop()
-    # execute shortest path home
 
     print("home!")
     sys.exit(0)
+
 
 def next_move():
     global curr, accessible, height
     x, y = round(curr.x), round(curr.y)
     nxt = curr + OFFSETS[curr.dir]
     if accessible[x,y,curr.dir] and not visited[round(nxt.x), round(nxt.y)]:
-        asyncio.create_task(movement.move_tiles(1))
-        visited[round(nxt.x), round(nxt.y)] = True
+        visit(nxt)
         return
     dir = (curr.dir+1)%4
     while dir != curr.dir:
         nxt = curr+OFFSETS[dir]
         if accessible[x,y,dir] and not visited[round(nxt.x), round(nxt.y)]:
-            asyncio.create_task(movement.rotate(dir - curr.dir))
-            time.sleep(0.01) #hopefully figures out the rotation
-            asyncio.create_task(movement.move_tiles(1))
-            visited[round(nxt.x), round(nxt.y)] = True
+            visit(nxt)
             return
         dir = (dir+1)%4
     closest_unvisited()
+
+def visit(tile:position):
+    '''
+    go to the adjacent location `tile` and update accessibility accordingly
+    '''
+    if (tile - curr).as_array().sum() > 1: raise ValueError("too far")
+
+    vec_to = tile-curr
+    necessary_dir = OFFSETS.index([round(vec_to.x),round(vec_to.y)])
+    
+    if necessary_dir != curr.dir:
+        asyncio.run(movement.rotate(necessary_dir - curr.dir))
+        time.sleep(0.01)
+    asyncio.run(movement.move_tiles(1))
+    visited[tile.x, tile.y] = True
 
 def deploy_kit():
     print("kit is being deployed")
