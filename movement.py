@@ -51,27 +51,6 @@ pwmB.start(40)
 driveSpeed:float = 40
 turn_speed:float = 40
 
-def drive(direction): #forward, backwards
-    if (direction=='forward'):
-        GPIO.output(motorA1, GPIO.HIGH)
-        GPIO.output(motorA2, GPIO.LOW)
-        GPIO.output(motorB1, GPIO.HIGH)
-        GPIO.output(motorB2, GPIO.LOW)
-
-    elif (direction=='backward'):
-        GPIO.output(motorA1, GPIO.LOW)
-        GPIO.output(motorA2, GPIO.HIGH)
-        GPIO.output(motorB1, GPIO.LOW)
-        GPIO.output(motorB2, GPIO.HIGH)
-    pwmA.ChangeDutyCycle(driveSpeed)
-    pwmB.ChangeDutyCycle(driveSpeed)
-    
-
-def changeDriveSpeed(speed):
-    driveSpeed = speed
-    pwmA.ChangeDutyCycle(driveSpeed)
-    pwmB.ChangeDutyCycle(driveSpeed)
-
 class movement:
     @staticmethod
     async def turn(dir:int) -> None:
@@ -94,17 +73,17 @@ class movement:
             await movement.stop()
     
     @staticmethod
-    async def drive(dir:int) -> None:
+    async def drive(dir:int=1) -> None:
         '''
         
         '''
-        if (dir=='forward'):
+        if (dir==1):
             GPIO.output(motorA1, GPIO.HIGH)
             GPIO.output(motorA2, GPIO.LOW)
             GPIO.output(motorB1, GPIO.HIGH)
             GPIO.output(motorB2, GPIO.LOW)
 
-        elif (dir=='backward'):
+        elif (dir== -1):
             GPIO.output(motorA1, GPIO.LOW)
             GPIO.output(motorA2, GPIO.HIGH)
             GPIO.output(motorB1, GPIO.LOW)
@@ -134,4 +113,37 @@ class movement:
         global driveSpeed
         driveSpeed = to
 
-    
+def test():
+    print("forwards")
+    asyncio.run(movement.drive(1))
+    time.sleep(1)
+    print("rigth")
+    asyncio.run(movement.turn(1))
+    time.sleep(0.1)
+    print("left")
+    asyncio.run(movement.turn(-1))
+    time.sleep(0.1)
+    print("stop")
+    asyncio.run(movement.turn(0))
+    time.sleep(0.1)
+    print("stop but again")
+    asyncio.run(movement.stop())
+    time.sleep(0.1)
+    print("slow down")
+    asyncio.run(movement.change_drive_speed(20))
+    print("forwards")
+    asyncio.run(movement.drive(1))
+    time.sleep(0.1)
+    print("stop")
+    asyncio.run(movement.stop())
+
+    print("forwards")
+    asyncio.create_task(movement.drive(1))
+    time.sleep(1)
+    print("stop")
+    asyncio.run(movement.stop())
+
+if __name__ == "__main__":
+    print("dfsjakhfjkdsahk")
+    test()
+    print("dafjdshk odne")
