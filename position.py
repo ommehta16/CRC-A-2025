@@ -5,6 +5,20 @@ class position:
         self.y = y
         self.z = z
         self.dir = dir
+
+    @staticmethod
+    def from_array(arr):
+        try:
+            nums = np.asarray(arr).astype(float)
+
+            if len(nums) == 1: return position(dir=nums[0])
+            if len(nums) == 3: return position(nums[0],nums[1],nums[2])
+            if len(nums) == 4: return position(nums[0],nums[1],nums[2],nums[3])
+        except: pass
+        raise TypeError()
+
+    def as_array(self) -> np.ndarray:
+        return np.asarray([self.x, self.y, self.z, self.dir])
     
     def copy(self):
         return position(self.x,self.y,self.z,self.dir)
