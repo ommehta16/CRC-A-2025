@@ -88,3 +88,7 @@ class position:
         if idx==0: self.x = value
         if idx==1: self.y = value
         if idx==2: self.z = value
+
+    def __iter__(self):
+        yield self.x
+        yield self.y
