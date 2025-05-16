@@ -4,7 +4,12 @@ all things for CRC Amogus in 2025
 
 ## TODO
 
-- write the damn code
+- `main.py -> deploy_kit()`
+- `movement.py -> rotate(by:int)`
+- `movement.py -> move_tiles()`
+- `movement.py -> rotate(by:int)`
+- `sensors.py -> *`
+- `??`
 
 ## RUNNING
 

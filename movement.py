@@ -114,7 +114,7 @@ class movement:
         driveSpeed = to
 
     @staticmethod
-    async def move_one_tile() -> None:
+    async def move_tiles(n:int=1) -> None:
         '''BRANDEN PLS IMPLEMENT THIS!!!'''
         # raise NotImplementedError()
 

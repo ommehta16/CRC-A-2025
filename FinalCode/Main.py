@@ -1,3 +1,6 @@
+# THIS IS ALL IN root main.py
+# delete once you see this @PhantomFrenzy151
+
 '''
 The algorithim at its core, as pseudocode for now
 '''
