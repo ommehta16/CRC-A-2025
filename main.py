@@ -10,7 +10,7 @@ import time
 import numpy as np
 import heapq
 from position import position
-from movement import movement
+from movement import movement, output
 import asyncio
 from collections import deque
 import sys
@@ -351,13 +351,10 @@ def update_visitedness(tile:position):
 
 def deploy_kit():
     print("kit is being deployed")
-    # bruh
-
-    start = time.time()
-
-    while (time.time() - start <= 6): # we're supposed to go for 5 but... 
-        
-        '''blinky blinky'''
+    
+    blinkers = asyncio.create_task(output.blink())
+    output.eject()
+    blinkers.get_loop().run_until_complete(blinkers)
 
 if __name__ == "__main__":
     try: main()
