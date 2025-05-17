@@ -147,7 +147,7 @@ def navigate():
         path.append(to_visit)
         to_visit = came_from[to_visit]
 
-    while len(path):
+    while len(path): #TODO should we nav direct or ??
         visit(path[-1])
         curr = path[-1]
         path.pop()
