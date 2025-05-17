@@ -350,11 +350,9 @@ def update_visitedness(tile:position):
 
 
 def deploy_kit():
-    print("kit is being deployed")
-    
     blinkers = asyncio.create_task(output.blink())
     output.eject()
-    blinkers.get_loop().run_until_complete(blinkers)
+    asyncio.run(asyncio.wait_for(blinkers, timeout=6))
 
 if __name__ == "__main__":
     try: main()
