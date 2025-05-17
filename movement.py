@@ -114,9 +114,11 @@ class movement:
         driveSpeed = to
 
     @staticmethod
-    async def move_tiles(n:int=1) -> None:
+    async def move_tiles(n:int=1) -> int:
         '''BRANDEN PLS IMPLEMENT THIS!!!'''
-        # raise NotImplementedError()
+        raise NotImplementedError()
+        # moves n tiles forwards, then *reports the vertical change*
+        return 0
 
     @staticmethod
     async def rotate(by:int) -> None:

@@ -86,8 +86,8 @@ class position:
             return self.x == other.x and self.y == other.y and self.z == other.z and self.dir == other.dir
         else:
             try:
-                to_add = np.asarray(other)
-                return to_add[0] == self.x and to_add[1] == self.y and to_add[2] == self.z
+                to_cmp = np.asarray(other)
+                return bool(to_cmp[0] == self.x and to_cmp[1] == self.y and to_cmp[2] == self.z)
             except: return False
 
     def __str__(self):
@@ -106,3 +106,6 @@ class position:
     def __iter__(self):
         yield self.x
         yield self.y
+
+    def __hash__(self):
+        return hash((self.x, self.y, self.z, self.dir))
