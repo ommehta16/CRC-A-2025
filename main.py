@@ -22,7 +22,6 @@ MAX_PULL_WAIT:float  = 5
 
 GRID_SIZE = (100,100)
 
-floor = np.zeros(GRID_SIZE).astype(int)
 height = np.zeros(GRID_SIZE).astype(int)
 
 OFFSETS = [
@@ -32,13 +31,21 @@ OFFSETS = [
     [-1,0],
 ]
 
+HOME = position(50,50,0)
+
 visited = np.zeros(GRID_SIZE).astype(int)
-accessible = np.zeros((GRID_SIZE[0],GRID_SIZE[1],4)).astype(bool)
+accessible = np.zeros((GRID_SIZE[0],GRID_SIZE[1],4)).astype(int)
 '''
 `accessible[i][j]` tells us which directions we can go from cell (i,j) in RBTL (0R, 1B, 2L, 3T)
 
 so if `accessible[i][j][2]` and `accessible[i][j][3]`, we can access `(i,j-1)` and `(i-1,j)`
+
+-1 --> not checked\n
+0 --> not accessible\n
+1 --> accessible
 '''
+
+accessible-=1
 
 set_start_method("spawn")  # Required for Picamera2 multiprocessing
 
@@ -59,158 +66,53 @@ wall_anchor = None
 
 mode = "WANDER"
 '''is `"WANDER"`, `"EXPLORE"`, or `"NAVIGATE"` based on the current mode'''
+nav_tgt = None
 
 def main():
     global curr, accessible, height
     print("started")
 
     while wall_anchor == None:
-        todo = asyncio.all_tasks()
-        asyncio.run(asyncio.wait(*todo,timeout=10))
-        check_passive()
-        if all(accessible[round(curr.x), round(curr.y)]): break
+        
         visit(curr + OFFSETS[curr.dir])
+        if all(accessible[round(curr.x), round(curr.y)]!=0): continue
         wall_anchor = curr
     
-    while not wall_on_right(curr):
-        asyncio.run(movement.turn(1))
-        curr.dir = (curr.dir+1)%4
+    while not wall_right(curr):
+        nxt=curr.copy()
+        nxt.dir = (nxt.dir+1)%4
+        visit(nxt)
+    check_active()
     mode = "EXPLORE"
 
     while True:
-        todo = asyncio.all_tasks()
-        asyncio.run(asyncio.wait(*todo,timeout=10)) # finish up any outstanding tasks from previous move here
         now:float = time.time()
         # grab color data from consumer here
         while not color_queue.empty():
-            nxt = color_queue.get()
-            print(nxt)
+            print(color_queue.get()) # the color is _only_ important for debug purposes
             asyncio.run(movement.stop())
             deploy_kit() #TODO NOT IMPLEMENTED YET!!!
         
-        # OK SO WHAT IVE REALIZED
-        # we need to go 3 modes
-        # 1. WANDER
-        # 2. EXPLORE
-        # 3. NAVIGATE
-        # 
-        # EXPLORE
-        # MAKE IT FOLLOW RIGHT WALL HERE!!
-        # PSEUDOCODE:
-        # check if wall in front
-        # yes -->  (
-        # check if wall on right
-        #   yes --> turn left, continue
-        #   no --> turn right, continue
-        # )
-        # 
-        # no --> (
-        # check if wall on right
-        #   yes --> move forwards
-        #   no --> turn right
-        # ) 
-        #
-        ##
-        
         if mode == "WANDER":
-            ...
+            wander()
         elif mode == "EXPLORE":
             explore()
-        else:
-            ...
-
-        nxt = curr + OFFSETS[curr.dir]
-        if accessible[round(curr.x),round(curr.y),curr.dir] and not visited[round(nxt.x), round(nxt.y)]:
-            visit(nxt)
-            return
-        dir = (curr.dir+1)%4
-        while dir != curr.dir:
-            nxt = curr+OFFSETS[dir]
-            if accessible[round(curr.x),round(curr.y),dir] and not visited[round(nxt.x), round(nxt.y)]:
-                visit(nxt)
+        elif mode == "NAVIGATE":
+            navigate()
+            if curr.as_array() == HOME:
+                print("it's over!")
                 return
-            dir = (dir+1)%4
-        closest_unvisited()
+            mode = "WANDER"
+        elif mode == "END": return
+        else: raise Exception("bruh?")
         time.sleep(max(TIME_INCREMENT - float(time.time()-now),0))
 
-def explore():
-    raise NotImplementedError()
-
-def check_passive():
-    # just check on right and front
-    front_distance, right_distance = sensors.get_distances() # type: ignore
-    front_color = sensors.get_color() #type: ignore
-
-    front = curr + OFFSETS[curr.dir]
-
-    if max(front_color) < 20: # it is black
-        accessible[round(front.x), round(front.y),curr.dir] = False
-    elif front_distance < 150: # is it close
-        accessible[round(front.x), round(front.y), curr.dir] = False
-    else:
-        accessible[round(front.x), round(front.y), curr.dir] = True
-    
-    right = curr + OFFSETS[(curr.dir+1)%4]
-    if right_distance < 150:
-        accessible[round(right.x), round(right.y), (curr.dir+1)%4] = False
-    else:
-        accessible[round(right.x), round(right.y), (curr.dir+1)%4] = True
-
-
-def check_active():
-    for _ in range(4):
-        asyncio.run(movement.rotate(1))
-        check_passive()
-
-def closest_unvisited():
-    global curr, accessible, height
-
-    # BFS for closest unvisited
-    bfs:deque[position] = deque()
-
-    bfs.appendleft(curr)
-    seen = set()
-    came_from:dict[position, position] = dict()
-
-    to_visit = None
-    
-    while len(bfs):
-        rn = bfs.pop()
-        
-        if visited[round(rn.x), round(rn.y)] == 2:
-            to_visit = rn
-            break
-        for dir in range(4):
-            nxt = rn + OFFSETS[dir]
-            if nxt in seen: continue
-            seen.add(nxt)
-            if accessible[round(rn.x), round(rn.y), dir]:
-                came_from[nxt] = rn
-                bfs.appendleft(nxt)
-    
-    if to_visit == None:
-        go_home()
+def navigate():
+    global curr, accessible, height, mode, nav_tgt
+    if not nav_tgt:
+        check_active()
+        mode = "WANDER"
         return
-    
-    # now we go to to_visit :)
-    rn = came_from[to_visit]
-    prev = to_visit
-
-    while rn != curr:
-        prev = rn
-        rn = came_from[rn]
-
-    visit(prev)
-
-def wall_on_right(pos:position)->bool:
-    if not accessible[round(pos.x),round(pos.y),(pos.dir + 1)%4]: return True
-    return False
-
-def go_home():
-    # bfs for shortest path home
-
-    global curr, accessible, height
-
     # BFS to home
 
     bfs:deque[position] = deque()
@@ -224,21 +126,24 @@ def go_home():
     while len(bfs):
         rn = bfs.pop() # where we "are" rn in bfs
         
-        if (rn.x,rn.y) == (50,50):
+        if rn.as_array() == nav_tgt:
             to_visit = rn
             break
         for dir in range(4):
             nxt = rn + OFFSETS[dir]
             if nxt in seen: continue
             seen.add(nxt)
-            if accessible[round(rn.x), round(rn.y), dir]:
+            if accessible[round(rn.x), round(rn.y), dir] == 1:
                 came_from[nxt] = rn
                 bfs.appendleft(nxt)
+    if to_visit == None:
+        print("NO PATH FOUND")
+        mode = "WANDER"
+        return
     
-    assert to_visit != None
 
     path:list[position] = []
-    while to_visit != curr:
+    while to_visit != curr.as_array():
         path.append(to_visit)
         to_visit = came_from[to_visit]
 
@@ -247,33 +152,152 @@ def go_home():
         curr = path[-1]
         path.pop()
 
-    print("home!")
-    sys.exit(0)
+def wander():
+    global curr, accessible, height, mode, wall_anchor
 
+    # BFS for closest unvisited
+    bfs:deque[position] = deque()
 
-def update_visitedness(tile:position):
-    if visited[round(tile.x), round(tile.y)]: return
+    bfs.appendleft(curr)
+    seen = set()
+    came_from:dict[position, position] = dict()
+
+    to_visit = None
     
+    while len(bfs):
+        rn = bfs.pop()
+        
+        if visited[round(rn.x), round(rn.y)] == 0 or visited[round(rn.x), round(rn.y)] == 1:
+            # if we haven't OR have only partially seen it
+            to_visit = rn
+            break
+        for dir in range(4):
+            nxt = rn + OFFSETS[dir]
+            if nxt in seen: continue
+            seen.add(nxt)
+            if accessible[round(rn.x), round(rn.y), dir] == 1:
+                came_from[nxt] = rn
+                bfs.appendleft(nxt)
+    
+    if to_visit == None:
+        go_home()
+        return
+    
+    if to_visit == curr:
+        check_active()
+        return
+    # now we go to to_visit :)
+    rn = came_from[to_visit]
+    prev = to_visit
+
+    while rn != curr:
+        prev = rn
+        rn = came_from[rn]
+    if visited[round(prev.x),round(prev.y)] == 0 and not all(accessible[round(prev.x),round(prev.y)]==1):
+        mode="EXPLORE"
+        wall_anchor=prev
+
+    visit(prev)
+
+def explore():
+    '''Follow right wall'''
+
+    global mode, wall_anchor
+    assert wall_anchor != None
+
+    nxt = curr.copy()
+    if not wall_right(curr): nxt.dir = (nxt.dir+1)%4 # turn right if we can
+    else:
+        if wall_front(curr): nxt.dir = (nxt.dir-1 + 4)%4
+        else: nxt += OFFSETS[curr.dir]
+    if nxt == wall_anchor.as_array():
+        mode = "WANDER"
+        wall_anchor = None
+        return
+    visit(nxt)
+
+def check_passive():
+    # just check on right and front
+    front_distance, right_distance = sensors.get_distances()
+    front_color = sensors.get_color()
+    assert front_color and front_distance and right_distance
+    front = curr + OFFSETS[curr.dir]
+
+    if max(front_color) < 20: # it is black
+        accessible[round(curr.x), round(curr.y),curr.dir] = 0
+        accessible[round(front.x), round(front.y),(2+curr.dir)%4] = 0
+    elif front_distance < 150: # is it close
+        accessible[round(curr.x), round(curr.y), curr.dir] = 0
+        accessible[round(front.x), round(front.y), (2+curr.dir)%4] = 0
+    else:
+        accessible[round(curr.x), round(curr.y), curr.dir] = 1
+        accessible[round(front.x), round(front.y), (2+curr.dir)%4] = 1
+    
+    right = curr + OFFSETS[(curr.dir+1)%4]
+    if right_distance < 150:
+        accessible[round(curr.x), round(curr.y), (curr.dir+1)%4] = 0
+        accessible[round(right.x), round(right.y), (curr.dir+3)%4] = 0
+    else:
+        accessible[round(curr.x), round(curr.y), (curr.dir+1)%4] = 1
+        accessible[round(right.x), round(right.y), (curr.dir+3)%4] = 1
+
+
+def check_active():
+    for _ in range(4):
+        asyncio.run(movement.rotate(1))
+        curr.dir = (curr.dir+1)%4
+        check_passive()
+
+def wall_right(pos:position)->bool:
+    if accessible[round(pos.x),round(pos.y),(pos.dir + 1)%4] != 1: return True
+    return False
+
+def wall_front(pos:position)->bool:
+    if accessible[round(pos.x),round(pos.y),pos.dir] != 1: return True
+    return False
+
+def go_home():
+    global mode, nav_tgt
+    nav_tgt = HOME
+    mode = "NAVIGATE"    
+    navigate()
+
+    print("home!")
+    mode = "END"
 
 def visit(tile:position):
+    global curr
     '''
-    go to the adjacent location `tile` and update accessibility accordingly
+    go to the location `tile` and update accessibility accordingly
+    `tile` must be 1 move away (meaning any rotation and up to 1 tile of movement)
     '''
-    if (tile - curr).as_array().sum() > 1: raise ValueError("too far")
-
     vec_to = tile-curr
-    necessary_dir = OFFSETS.index([round(vec_to.x),round(vec_to.y)])
+    if abs(vec_to.x) + abs(vec_to.y) > 1: raise ValueError("too far")
+
+    if vec_to.x ==0 and vec_to.y ==0: necessary_dir = curr.dir
+    else: necessary_dir = OFFSETS.index([round(vec_to.x),round(vec_to.y)])
     
     if necessary_dir != curr.dir:
         asyncio.run(movement.rotate(necessary_dir - curr.dir))
+        curr.dir = necessary_dir
         time.sleep(0.01)
     asyncio.run(movement.move_tiles(1))
     check_passive()
-    visited[tile.x, tile.y] = 1
+    curr = tile
+    update_visitedness(curr)
+
+def update_visitedness(tile:position):
+    global visited
+
+    x, y, z = map(round,[tile.x, tile.y, tile.z])
+
+    if all(accessible[x,y]!=-1): visited[x,y] = 2 # All directions checked (are 0 or 1)
+    elif any(accessible[x,y]!=-1): visited[x,y] = 1 # Some directions checked
+    else: visited[x,y] = 0
+
 
 def deploy_kit():
     print("kit is being deployed")
-
     # bruh
 
     start = time.time()
@@ -283,9 +307,7 @@ def deploy_kit():
         '''blinky blinky'''
 
 if __name__ == "__main__":
-    try:
-        main()
-    except:
-        stop_event.set()
+    try: main()
+    except: stop_event.set()
     finally:
         for p in procs: p.join()
