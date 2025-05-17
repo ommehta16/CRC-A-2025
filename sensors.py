@@ -8,6 +8,7 @@ import adafruit_lsm9ds0
 import tkinter as tk
 
 #test code
+
 root = tk.Tk()
 root.title("Live Color Reader")
 canvas = tk.Canvas(root, width=300, height=300)
@@ -23,7 +24,7 @@ ledPin = 26
 xshut1_pin = 17
 xshut2_pin = 27
 tcs_power_pin = 4
-hall1_pin = 10
+#hall1_pin = 10
 hall2_pin = 9
 ledState = GPIO.LOW
 
@@ -38,7 +39,7 @@ GPIO.setup(xshut1_pin, GPIO.OUT)
 GPIO.setup(xshut2_pin, GPIO.OUT)
 GPIO.setup(tcs_power_pin, GPIO.OUT)
 
-GPIO.setup(hall1_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+#GPIO.setup(hall1_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(hall2_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 i2c = board.I2C()
@@ -84,7 +85,7 @@ def initialize_sensors():
 	time.sleep(0.3)
 	
 	color_sensor = adafruit_tcs34725.TCS34725(i2c)
-	color_sensor.integration_time=150
+	color_sensor.integration_time=200
 	color_sensor.gain = 60
 
 	imu = adafruit_lsm9ds0.LSM9DS0_I2C(i2c)
@@ -129,9 +130,10 @@ accel_offset = [0.0, 0.0, 0.0]
 accel_offset_initialized = False
 '''
 def get_pitch():
+	ax,ay,az=get_accel()
 	'''
 	global accel_offset, accel_offset_initialized
-	ax,ay,az=get_accel()
+	
 	# On first call, capture the current reading as "level baseline"
 	if not accel_offset_initialized:
 		accel_offset = [ax, ay, az]
@@ -199,17 +201,19 @@ def get_heading():
 
 
 def read_hall_sensors():
-	hall1 = GPIO.input(hall1_pin)
+	#hall1 = GPIO.input(hall1_pin)
 	hall2 = GPIO.input(hall2_pin)
+	'''
 	if hall1 == GPIO.LOW:
 		print("Hall Sensor 1: Magnet detected")
 	else:
 		print("Hall Sensor 1: No magnet")
+	'''
 	if hall2 == GPIO.LOW:
 		print("Hall Sensor 2: Magnet detected")
 	else:
 		print("Hall Sensor 2: No magnet")
-	return hall1, hall2
+	return hall2 #,hall1
 
 if __name__ == "__main__":
 	try:
@@ -227,10 +231,13 @@ if __name__ == "__main__":
 
 
 
-		while True:			
-			get_pitch()
+		while True:		
+			#read_hall_sensors()
+			get_color()
+	
 			if GPIO.input(buttonPin) == GPIO.HIGH:
 				blink()
+				get_pitch()
 				get_distances()
 				get_color()
 				get_accel()
