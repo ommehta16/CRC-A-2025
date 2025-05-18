@@ -241,12 +241,12 @@ def check_passive():
         r,g,b = rgb
         r/=255; g/=255; b/=255
         hue = -1
-        delta = max(r,g,b)-min(r,g,b)
+        delta = max(r,g,b)-min(r,g,b)+0.0001
         if max(r,g,b) == r: hue = ((g-b)/delta) % 6
         elif max(r,g,b) == g: hue = ((b-r)/delta)+2
         else: hue=((r-g)/delta)+4
         hue *= 60
-        sat = (max(r,g,b)-min(r,g,b))/max(r,g,b)
+        sat = (max(r,g,b)-min(r,g,b))/(max(r,g,b)+0.0001)
 
         return hue,sat, max(r,g,b)
     
@@ -423,6 +423,15 @@ if __name__ == "__main__":
                 p.kill() # Force kill if join times out
         print("All processes joined.")
 
+            # print(enters)
+            if sensors.get_button():
+                print("restarting...")
+                sensors.blink(1,0.1)
+                reset()
+                sensors.blink(1,0)
+                break
+            sensors.blink(1,0)
+            time.sleep(0.5)
 
 print("Exiting, joining processes...")
 GPIO.cleanup()
