@@ -6,6 +6,7 @@ import multiprocessing.connection as connection
 import asyncio
 import numpy as np
 import sensors
+import math
 
 #Pins for Motor Drivers
 motorA1 = 1
@@ -14,6 +15,10 @@ motorApwm = 12
 motorB1 = 24
 motorB2 = 23
 motorBpwm = 18
+
+tileTime=2.8
+rotateTime=1.4
+speed=30/tileTime#30 is in cm, this is cm/s
 
 OFFSETS = [
     [0,1],
@@ -112,8 +117,43 @@ class movement:
 
     @staticmethod
     async def move_tiles(n:int=1) -> float: #TODO
+        pitch = 0
+        for i in range(5):
+            pitch += sensors.get_pitch()
+        pitch/=5
+        if pitch<5:
+            await movement.drive()
+            time.sleep(tileTime)
+            pitch = 0
+            for i in range(5):
+                pitch += sensors.get_pitch()
+            pitch/=5
+            if pitch<5:
+                return 0 #always flat
+            else:
+                time.sleep((15/math.cos(pitch*math.pi/180)-15)/speed)
+                return 15*math.tan((pitch*math.pi/180))/25 #flat, than slope
+        else:
+            await movement.drive()
+            time.sleep(tileTime)
+            time.sleep((15/math.cos(pitch*math.pi/180)-15)/speed)
+            vertical=15*math.tan((pitch*math.pi/180))
+            pitch = 0
+            for i in range(5):
+                pitch += sensors.get_pitch()
+            pitch/=5
+            if pitch<5:
+                return vertical/25 #slope than flat
+            else:
+                time.sleep((15/math.cos(pitch*math.pi/180)-15)/speed)
+                vertical+=15*math.tan((pitch*math.pi/180))
+                return vertical/25 #slope than slope
+        motors.stop()
+
+
+
         '''BRANDEN PLS IMPLEMENT THIS!!!'''
-        raise NotImplementedError()
+        
         # moves n tiles forwards, then *reports the vertical change* as a proportion of 25cm
         # This should literally just move the robot n tiles laterally forwards. It MUST adjust 
         # for inclines, and (should? idk if it has to ?) adjust for speed bumps to avoid us losing 
@@ -125,8 +165,11 @@ class movement:
 
     @staticmethod
     async def rotate(by:int) -> None: #TODO
+        movement.turn(by)
+        time.sleep(math.abs(by)*rotateTime)
+        movement.stop()
         '''BRANDEN PLS IMPLEMENT THIS AS WELL'''
-        raise NotImplementedError()
+        #raise NotImplementedError()
         # just turn the bot by `by` 90 degree rotations (+3 --> 3 turns right, -3 --> 3 turns left)
         # 
         # Turns 90 degrees right `by` times. If `by` is negative, it turns left |by| times. If by
