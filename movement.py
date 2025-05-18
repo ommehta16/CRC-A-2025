@@ -120,7 +120,7 @@ class movement:
         driveSpeed = to
 
     @staticmethod
-    async def move_tiles(n:int=1) -> int: #TODO
+    async def move_tiles(n:int=1) -> float: #TODO
         '''BRANDEN PLS IMPLEMENT THIS!!!'''
         raise NotImplementedError()
         # moves n tiles forwards, then *reports the vertical change* as a proportion of 25cm
@@ -137,8 +137,6 @@ class movement:
         '''BRANDEN PLS IMPLEMENT THIS AS WELL'''
         raise NotImplementedError()
         # just turn the bot by `by` 90 degree rotations (+3 --> 3 turns right, -3 --> 3 turns left)
-        # 
-        # 
         # 
         # Turns 90 degrees right `by` times. If `by` is negative, it turns left |by| times. If by
         # is positive, it turns right |by| times. Preferrably, the `by` 90 degree turns would be one,
