@@ -14,7 +14,6 @@ import multiprocessing as mp
 import multiprocessing.connection as connection
 import asyncio
 import numpy as np
-import sensors
 
 #Pins for Motor Drivers
 motorA1 = 1
@@ -147,21 +146,21 @@ def test():
     time.sleep(1)
     print("rigth")
     asyncio.run(movement.turn(1))
-    time.sleep(0.1)
+    time.sleep(1)
     print("left")
     asyncio.run(movement.turn(-1))
-    time.sleep(0.1)
+    time.sleep(1)
     print("stop")
     asyncio.run(movement.turn(0))
-    time.sleep(0.1)
+    time.sleep(1)
     print("stop but again")
     asyncio.run(movement.stop())
-    time.sleep(0.1)
+    time.sleep(1)
     print("slow down")
     asyncio.run(movement.change_drive_speed(20))
     print("forwards")
     asyncio.run(movement.drive(1))
-    time.sleep(0.1)
+    time.sleep(1)
     print("stop")
     asyncio.run(movement.stop())
 
@@ -177,7 +176,7 @@ def test2():
         time.sleep(0.1)
 if __name__ == "__main__":
     print("dfsjakhfjkdsahk")
-    #test()
-    test2()
+    test()
+    #test2()
     print("dafjdshk odne")
     GPIO.cleanup()
