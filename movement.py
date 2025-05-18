@@ -1,12 +1,3 @@
-'''
-OK GUYS
-COMMON FORMATTING FOR LOCATION INCOMING!!
-
-we're going to store direction as a dict
-
-position state is passed around by the main guy
-'''
-
 import RPi.GPIO as GPIO
 import time
 from time import sleep
@@ -151,16 +142,15 @@ class output:
     def eject(): #TODO
         '''Eject 1 package from the mag'''
         raise NotImplementedError()
-    
-        '''
         
-        '''
+        # this just needs to activate the solenoid (or equivalent?) for the dispenser.
+        # I assume this is trivial once things are wired but ??
 
 
 def test():
     print("forwards")
     asyncio.run(movement.drive(1))
-    time.sleep(1)
+    time.sleep(4)
     asyncio.run(movement.stop())
     
 def test2():
