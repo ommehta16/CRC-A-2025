@@ -199,9 +199,9 @@ class output:
 
 def test():
 
-    pwmServo.changeDutyCycle(50)
+    pwmServo.ChangeDutyCycle(50)
     time.sleep(2)
-    pwmServo.changeDutyCycle(0)
+    pwmServo.ChangeDutyCycle(0)
     
 
 def test2():
