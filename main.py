@@ -42,7 +42,7 @@ RBTL (0R, 1B, 2L, 3T)
 
 accessible-=1
 
-set_start_method("spawn")  # Required for Picamera2 multiprocessing
+
 
 frame_queue     = Queue(maxsize=5)
 annotated_queue = Queue(maxsize=5)
@@ -350,6 +350,7 @@ def deploy_kit():
     asyncio.run(asyncio.wait_for(blinkers, timeout=6))
 
 if __name__ == "__main__":
+        set_start_method("spawn")  # Required for Picamera2 multiprocessing
         sensors.blink(2)
         if sensors.get_button():
             sensors.blink(2)
