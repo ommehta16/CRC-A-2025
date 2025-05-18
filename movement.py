@@ -129,9 +129,11 @@ class movement:
                 pitch += sensors.get_pitch()
             pitch/=5
             if pitch<5:
+                await movement.stop()
                 return 0 #always flat
             else:
                 time.sleep((15/math.cos(pitch*math.pi/180)-15)/speed)
+                await movement.stop()
                 return 15*math.tan((pitch*math.pi/180))/25 #flat, than slope
         else:
             await movement.drive()
@@ -143,14 +145,13 @@ class movement:
                 pitch += sensors.get_pitch()
             pitch/=5
             if pitch<5:
+                await movement.stop()
                 return vertical/25 #slope than flat
             else:
                 time.sleep((15/math.cos(pitch*math.pi/180)-15)/speed)
                 vertical+=15*math.tan((pitch*math.pi/180))
+                await movement.stop()
                 return vertical/25 #slope than slope
-        motors.stop()
-
-
 
         '''BRANDEN PLS IMPLEMENT THIS!!!'''
         
