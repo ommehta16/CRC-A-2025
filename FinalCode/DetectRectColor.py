@@ -71,7 +71,7 @@ def detector(frame_q:mp.Queue, annotated_q:mp.Queue, stop_evt):
         if not annotated_q.full():
             annotated_q.put(frame)
 
-def consumer(annotated_q:mp.Queue, color_queue:mp.Queue, stop_evt):
+def consumer(annotated_q:mp.Queue,  stop_evt):#color_queue:mp.Queue,
     while not stop_evt.is_set():
         if annotated_q.empty():
             continue
