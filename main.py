@@ -384,32 +384,33 @@ def reset():
 if __name__ == "__main__":
     try:
         set_start_method("spawn")  # Required for Picamera2 multiprocessing
-    except RuntimeError:
-        pass
+    except RuntimeError: pass
     sensors.blink(2)
-    try:
+    while True:
         try: main()
-        except Exception as e: reset()
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            import traceback
+            traceback.print_exc()
+            stop_event.set()
+        
         while True:
             if sensors.get_button():
-                sensors.blink(10,0.1)
-                try: main()
-                except: reset()
-            sensors.blink(2)
+                print("restarting...")
+                sensors.blink(1,0.1)
+                reset()
+                sensors.blink(1,0)
+                break
+            sensors.blink(1,0)
             time.sleep(0.5)
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        import traceback
-        traceback.print_exc()
-        stop_event.set()
-    finally:
-        print("Exiting, joining processes...")
-        GPIO.cleanup()
-        stop_event.set() # Ensure all processes are signalled to stop
-        for p in procs:
-            if p.is_alive():
-                p.join(timeout=2) # Wait for processes to finish
-            if p.is_alive():
-                print(f"Process {p.name} did not terminate, killing.")
-                p.kill() # Force kill if join times out
-        print("All processes joined.")
+
+print("Exiting, joining processes...")
+GPIO.cleanup()
+stop_event.set() # Ensure all processes are signalled to stop
+for p in procs:
+    if p.is_alive():
+        p.join(timeout=2) # Wait for processes to finish
+    if p.is_alive():
+        print(f"Process {p.name} did not terminate, killing.")
+        p.kill() # Force kill if join times out
+print("All processes joined.")
