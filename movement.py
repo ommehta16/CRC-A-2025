@@ -15,6 +15,7 @@ motorApwm = 12
 motorB1 = 24
 motorB2 = 23
 motorBpwm = 18
+servopwm = 13
 
 tileTime=2.8
 rotateTime=1.4
@@ -46,10 +47,15 @@ GPIO.output(motorA2, GPIO.LOW)
 GPIO.output(motorB1, GPIO.LOW)
 GPIO.output(motorB2, GPIO.LOW)
 
+GPIO.setup(servopwm, GPIO.OUT)
+pwmServo = GPIO.PWM(servopwm, 25000)
+
 pwmA.ChangeDutyCycle(0)
 pwmB.ChangeDutyCycle(0) 
+
 pwmA.start(40)
 pwmB.start(40)
+pwmServo.start(0)
 driveSpeed:float = 40
 turn_speed:float = 40
 
@@ -192,10 +198,11 @@ class output:
 
 
 def test():
-    print("forwards")
-    asyncio.run(movement.drive(1))
-    time.sleep(4)
-    asyncio.run(movement.stop())
+
+    GPIO.changeDutyCycle(50)
+    time.sleep(2)
+    GPIO.changeDutyCycle(0)
+    
     
 def test2():
     asyncio.run(movement.drive())
