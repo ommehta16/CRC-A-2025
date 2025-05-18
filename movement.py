@@ -48,14 +48,14 @@ GPIO.output(motorB1, GPIO.LOW)
 GPIO.output(motorB2, GPIO.LOW)
 
 GPIO.setup(servopwm, GPIO.OUT)
-pwmServo = GPIO.PWM(servopwm, 25000)
+pwmServo = GPIO.PWM(servopwm, 100)
 
 pwmA.ChangeDutyCycle(0)
 pwmB.ChangeDutyCycle(0) 
 
 pwmA.start(40)
 pwmB.start(40)
-pwmServo.start(0)
+#pwmServo.start(0)
 driveSpeed:float = 40
 turn_speed:float = 40
 
@@ -191,18 +191,16 @@ class output:
     @staticmethod
     def eject(): #TODO
         '''Eject 1 package from the mag'''
-        raise NotImplementedError()
-        
+        #raise NotImplementedError()
+        print("dispense")
         # this just needs to activate the solenoid (or equivalent?) for the dispenser.
         # I assume this is trivial once things are wired but ??
 
 
 def test():
-
-    pwmServo.ChangeDutyCycle(50)
+    pwmServo.ChangeDutyCycle(100)
     time.sleep(2)
     pwmServo.ChangeDutyCycle(0)
-    
 
 def test2():
     asyncio.run(movement.drive())

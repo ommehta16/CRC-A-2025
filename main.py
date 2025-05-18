@@ -94,10 +94,16 @@ def main():
         now:float = time.time()
         # grab color data from consumer here
         if sensors.get_button(): return #close if the button is pressed
-        while not color_queue.empty():
-            print(color_queue.get()) # the color is _only_ important for debug purposes
+        if not color_queue.empty():
+            color=color_queue.get() # the color is _only_ important for debug purposes
+            if color=="red":
+                deploy_kit(2)
+            elif color=="yellow":
+                deploy_kit(1)
+            elif color=="green":
+                deploy_kit(0)
             asyncio.run(movement.stop())
-            deploy_kit() #TODO NOT IMPLEMENTED YET!!!
+
         
         if mode == "WANDER": wander()
         elif mode == "EXPLORE": explore()
@@ -112,6 +118,7 @@ def main():
         time.sleep(max(TIME_INCREMENT - float(time.time()-now),0))
 
 def navigate():
+    print("navigate")
     global curr, accessible, mode, nav_tgt
     if not nav_tgt:
         check_active()
@@ -146,6 +153,7 @@ def navigate():
             tmp.z = int(not bool(round(rn.z)))
             bfs.appendleft(tmp)
     if to_visit == None:
+        check_active()
         print("NO PATH FOUND")
         mode = "WANDER"
         return
@@ -161,6 +169,7 @@ def navigate():
         path.pop()
 
 def wander():
+    print("wander")
     global curr, accessible, mode, wall_anchor
 
     # BFS for closest unvisited
@@ -214,6 +223,7 @@ def wander():
     visit(prev)
 
 def explore():
+    print("explore")
     '''Follow right wall'''
 
     global mode, wall_anchor
@@ -231,6 +241,7 @@ def explore():
     visit(nxt)
 
 def check_passive():
+    print("check passive")
     global accessible
     # just check on right and front
     front_distance, right_distance = sensors.get_distances()
@@ -257,40 +268,50 @@ def check_passive():
     if max(front_color) < 20: # it is black
         accessible[(*curr.coords(),curr.dir)] = 0
         accessible[(*front.coords(),(2+curr.dir)%4)] = 0
+        print("front black")
     elif front_distance < 150: # is it close
         accessible[(*curr.coords(), curr.dir)] = 0
         accessible[(*front.coords(), (2+curr.dir)%4)] = 0
+        print("front too close")
     else:
         accessible[(*curr.coords(), curr.dir)] = 1
         accessible[(*front.coords(), (2+curr.dir)%4)] = 1
     right = curr + OFFSETS[(curr.dir+1)%4]
+    print("front accessible")
     if right_distance < 150:
         accessible[(*curr.coords(), (curr.dir+1)%4)] = 0
         accessible[(*right.coords(), (curr.dir+3)%4)] = 0
+        print("right too close")
     else:
         accessible[(*curr.coords(), (curr.dir+1)%4)] = 1
         accessible[(*right.coords(), (curr.dir+3)%4)] = 1
+        print("right accessible")
 
 def check_active():
+    print("check active")
     for _ in range(4):
         tgt = curr.copy()
         tgt.dir = (curr.dir+1)%4
         visit(tgt)
 
 def wall_right(pos:position)->bool:
+    print("wall right")
     if accessible[(*pos.coords(),(pos.dir + 1)%4)] != 1: return True
     return False
 
 def wall_front(pos:position)->bool:
+    print("wall front")
     if accessible[(*pos.coords(),pos.dir)] != 1: return True
     return False
 
 def go_home():
+    print("go home")
     global mode, nav_tgt
     nav_tgt = HOME
     mode = "NAVIGATE"
 
 def visit(dest:position):
+    print("visit")
     '''
     go to the location `tile` and update accessibility accordingly
     `tile` must be 1 move away (meaning any rotation and up to 1 tile of movement)
@@ -360,17 +381,22 @@ def visit(dest:position):
         update_visitedness(curr)
 
 def update_visitedness(tile:position):
+    print("update visitedness")
     global visited
 
     if all(accessible[tile.coords()]!=-1): visited[tile.coords()] = 2 # All directions checked (are 0 or 1)
     elif any(accessible[tile.coords()]!=-1): visited[tile.coords()] = 1 # Some directions checked
     else: visited[tile.coords()] = 0 # No directions checked
 
-def deploy_kit():
-    output.eject()
+def deploy_kit(n):
+    print("deploy kit")
+    for i in range(n):
+        output.eject()
+    
     asyncio.run(output.blink())
 
 def reset():
+    print("reset")
     global mode, accessible, visited, ramps
     mode = "WANDER"
     sensors.blink(10,0.1)
