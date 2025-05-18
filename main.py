@@ -384,7 +384,8 @@ def reset():
 
 if __name__ == "__main__":
     try:
-        set_start_method("spawn")
+        try: set_start_method("spawn")
+        except: pass
         print("wow so cool")
         sensors.blink(2)
         main()
