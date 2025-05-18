@@ -391,6 +391,7 @@ if __name__ == "__main__":
         try: main()
         except Exception as e: reset()
         while True:
+            print(enters)
             if sensors.get_button():
                 sensors.blink(10,0.1)
                 try: main()
