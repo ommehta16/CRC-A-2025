@@ -1,0 +1,1 @@
+/home/skibidi2025/sus/bin/python3 /home/skibidi2025/Desktop/code/CRC-A-2025/main.py &

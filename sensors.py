@@ -8,7 +8,7 @@ import adafruit_lsm9ds0
 import tkinter as tk
 
 #test code
-
+'''
 root = tk.Tk()
 root.title("Live Color Reader")
 canvas = tk.Canvas(root, width=300, height=300)
@@ -16,7 +16,7 @@ canvas.pack()
 
 def rgb_to_hex(r, g, b):
 	return "#{:02x}{:02x}{:02x}".format(r, g, b)
-
+'''
 ####
 
 buttonPin = 21
@@ -107,9 +107,11 @@ def get_color():
 		r, g, b = color_sensor.color_rgb_bytes
 		print(f"Color: R={r}, G={g}, B={b}")
 		### more test code
+		'''
 		color_hex = rgb_to_hex(r, g, b)
 		canvas.configure(bg=color_hex)
 		root.update()
+		'''
 		return r, g, b
 	else:
 		print("Color sensor not initialized.")
@@ -214,7 +216,10 @@ def read_hall_sensors():
 	else:
 		print("Hall Sensor 2: No magnet")
 	return hall2 #,hall1
-
+def get_button():
+	if GPIO.input(buttonPin)==GPIO.HIGH:
+		return True
+	return False 
 if __name__ == "__main__":
 	try:
 		initialize_sensors()

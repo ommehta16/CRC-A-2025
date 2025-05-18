@@ -45,6 +45,11 @@ GPIO.setup(motorB2, GPIO.OUT)
 GPIO.setup(motorBpwm, GPIO.OUT)
 pwmB = GPIO.PWM(motorBpwm, 25000)
 
+GPIO.output(motorA1, GPIO.LOW)
+GPIO.output(motorA2, GPIO.LOW)
+GPIO.output(motorB1, GPIO.LOW)
+GPIO.output(motorB2, GPIO.LOW)
+
 pwmA.ChangeDutyCycle(0)
 pwmB.ChangeDutyCycle(0) 
 pwmA.start(40)
