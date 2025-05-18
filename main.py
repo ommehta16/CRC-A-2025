@@ -10,6 +10,7 @@ import asyncio
 from collections import deque
 import sensors
 import sys
+import RPi.GPIO as GPIO
 
 TIME_INCREMENT:float = 0.5
 START:float          = time.time()
@@ -39,7 +40,7 @@ RBTL (0R, 1B, 2L, 3T)
 
 accessible-=1
 
-set_start_method("spawn")  # Required for Picamera2 multiprocessing
+
 
 frame_queue     = Queue(maxsize=5)
 annotated_queue = Queue(maxsize=5)
@@ -360,15 +361,14 @@ def reset():
     print("SHIT")
 
 if __name__ == "__main__":
+    set_start_method("spawn")  # Required for Picamera2 multiprocessing
+    sensors.blink(2)
     try:
-        try: main()
-        except Exception as e: reset()
         while True:
             if sensors.get_button():
                 sensors.blink(10,0.1)
                 try: main()
                 except: reset()
-            sensors.blink(2)
             time.sleep(0.5)
     except Exception as e:
         print(f"An error occurred: {e}")
@@ -377,6 +377,7 @@ if __name__ == "__main__":
         stop_event.set()
     finally:
         print("Exiting, joining processes...")
+        GPIO.cleanup()
         stop_event.set() # Ensure all processes are signalled to stop
         for p in procs:
             if p.is_alive():
