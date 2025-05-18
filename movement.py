@@ -199,11 +199,11 @@ class output:
 
 def test():
 
-    GPIO.changeDutyCycle(50)
+    pwmServo.GPIO.changeDutyCycle(50)
     time.sleep(2)
-    GPIO.changeDutyCycle(0)
+    pwmServo.GPIO.changeDutyCycle(0)
     
-    
+
 def test2():
     asyncio.run(movement.drive())
     while True:
