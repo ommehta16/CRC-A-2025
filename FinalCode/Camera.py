@@ -17,8 +17,6 @@ def capture_frames(width=640, height=360):
 			frame = picam2.capture_array()
 			frame_bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 			yield frame_bgr
-	except generatorExit:
-		pass
 	except KeyboardInterrupt:
 		print("interrupted by user")
 	finally:
