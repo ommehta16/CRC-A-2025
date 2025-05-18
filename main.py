@@ -383,28 +383,29 @@ def reset():
 
 if __name__ == "__main__":
     try:
-        set_start_method("spawn")  # Required for Picamera2 multiprocessing
-    except RuntimeError: pass
-    sensors.blink(2)
-    while True:
-        try: main()
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            import traceback
-            traceback.print_exc()
-            stop_event.set()
-        
+        try:
+            set_start_method("spawn")  # Required for Picamera2 multiprocessing
+        except RuntimeError: 
+            pass
+        sensors.blink(2)
         while True:
-            print(enters)
-            if sensors.get_button():
-                print("restarting...")
-                sensors.blink(1,0.1)
-                reset()
+            try: main()
+            except Exception as e:
+                print(f"An error occurred: {e}")
+                import traceback
+                traceback.print_exc()
+                stop_event.set()
+            
+            while True:
+                print("enters")
+                if sensors.get_button():
+                    print("restarting...")
+                    sensors.blink(1,0.1)
+                    reset()
+                    sensors.blink(1,0)
+                    break
                 sensors.blink(1,0)
-                break
-            sensors.blink(1,0)
-            time.sleep(0.5)
-
+                time.sleep(0.5)
     except Exception as e:
         print(f"An error occurred: {e}")
         import traceback
@@ -433,4 +434,3 @@ for p in procs:
         print(f"Process {p.name} did not terminate, killing.")
         p.kill() # Force kill if join times out
 print("All processes joined.")
->>>>>>> 968190b269dabd140a346fef892ce4fcc0559974
