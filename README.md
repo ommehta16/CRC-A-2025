@@ -1,16 +1,15 @@
 # PHS-CRC-A-2025
 
-all things for CRC Amogus in 2025
+all things for CRC Esoteric Engineering in 2025
 
 ## TODO
 
-- `main.py -> deploy_kit()`
-- `main.py` -> make navigation work in 3D
-- `main.py -> visit()` make it take in height change
 - `movement.py -> rotate(by:int)`
 - `movement.py -> move_tiles()`
 - `movement.py -> rotate(by:int)`
-- `??`
+- `movement.py -> blink()`
+- `movement.py -> eject()`
+- OCR
 
 ## RUNNING
 

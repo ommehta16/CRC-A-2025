@@ -127,6 +127,23 @@ class movement:
         
         # just turn the bot by `by` 90 degree rotations (+3 --> 3 turns right, -3 --> 3 turns left)
         #
+class output:
+    @staticmethod
+    async def blink(): #TODO
+        start = time.time()
+        on = False
+        while time.time() - start <= 6:
+            on = not on
+            if on:
+                '''turn LED on'''
+            else:
+                '''turn LED off'''
+            time.sleep(0.5)
+        # set it s.t. light off
+    @staticmethod
+    def eject(): #TODO
+        '''Eject 1 package from the mag'''
+
 
 def test():
     print("forwards")
