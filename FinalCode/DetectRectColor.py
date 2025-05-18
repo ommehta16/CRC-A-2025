@@ -49,7 +49,7 @@ def detect_colored_rectangles(frame_bgr):
 
     return detections
 
-def detector(frame_q:mp.Queue, annotated_q:mp.Queue, stop_evt):
+def detector(frame_q: mp.Queue, color_q: mp.Queue, stop_evt):
     while not stop_evt.is_set():
         if frame_q.empty():
             continue
@@ -64,14 +64,19 @@ def detector(frame_q:mp.Queue, annotated_q:mp.Queue, stop_evt):
                 'yellow': (0, 255, 255),
                 'green': (0, 255, 0)
             }[color]
-            if w>10 and h>10: 
-                annotated_q.put(color)
+            if w > 10 and h > 10:
+                color_q.put(color)
                 cv2.rectangle(frame, (x, y), (x + w, y + h), color_bgr, 2)
                 cv2.putText(frame, color, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, color_bgr, 2)
-            cv2.imshow("Detected Rectangles", frame)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                stop_evt.set()
-                break
+
+        # Show the annotated frame
+        cv2.imshow("Detected Rectangles", frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            stop_evt.set()
+            break
+
+    cv2.destroyAllWindows()
+
             # if w > 10 and h > 10: annotated_q.put((x,y,w,h,color))
         #     cv2.rectangle(frame, (x, y), (x + w, y + h), color_bgr, 2)
         #     cv2.putText(frame, color, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, color_bgr, 2)
