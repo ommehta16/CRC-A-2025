@@ -12,11 +12,18 @@ def capture_frames(width=640, height=360):
 	picam2.set_controls({"AfMode": 2})  # Continuous autofocus
 	picam2.start()
 	time.sleep(2)
-
-	while True:
-		frame = picam2.capture_array()
-		frame_bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-		yield frame_bgr
+	try:
+		while True:
+			frame = picam2.capture_array()
+			frame_bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+			yield frame_bgr
+	except generatorExit:
+		pass
+	except KeyboardInterrupt:
+		print("interrupted by user")
+	finally:
+		print("stopping cam")
+		picam2.stop()
 
 def producer(frame_q, stop_evt):
 	print("producer started")
