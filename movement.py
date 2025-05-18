@@ -14,6 +14,7 @@ import multiprocessing as mp
 import multiprocessing.connection as connection
 import asyncio
 import numpy as np
+import sensors
 
 #Pins for Motor Drivers
 motorA1 = 1
