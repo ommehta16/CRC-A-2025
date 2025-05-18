@@ -11,6 +11,7 @@ from collections import deque
 import sensors
 import sys
 import RPi.GPIO as GPIO
+import traceback
 
 TIME_INCREMENT:float = 0.5
 START:float          = time.time()
@@ -383,32 +384,11 @@ def reset():
 
 if __name__ == "__main__":
     try:
-        try:
-            set_start_method("spawn")  # Required for Picamera2 multiprocessing
-        except RuntimeError: 
-            pass
+        set_start_method("spawn")
         sensors.blink(2)
-        while True:
-            try: main()
-            except Exception as e:
-                print(f"An error occurred: {e}")
-                import traceback
-                traceback.print_exc()
-                stop_event.set()
-            
-            while True:
-                print("enters")
-                if sensors.get_button():
-                    print("restarting...")
-                    sensors.blink(1,0.1)
-                    reset()
-                    sensors.blink(1,0)
-                    break
-                sensors.blink(1,0)
-                time.sleep(0.5)
+        main()
     except Exception as e:
         print(f"An error occurred: {e}")
-        import traceback
         traceback.print_exc()
         stop_event.set()
     finally:
@@ -423,16 +403,57 @@ if __name__ == "__main__":
                 p.kill() # Force kill if join times out
         print("All processes joined.")
 
-        sensors.blink(1,0)
-        time.sleep(0.5)
+    
+#     try:
+#         try:
+#             set_start_method("spawn")  # Required for Picamera2 multiprocessing
+#         except RuntimeError: 
+#             pass
+#         sensors.blink(2)
+#         while True:
+#             try: main()
+#             except Exception as e:
+#                 print(f"An error occurred: {e}")
+#                 traceback.print_exc()
+#                 stop_event.set()
+            
+#             while True:
+#                 print("enters")
+#                 if sensors.get_button():
+#                     print("restarting...")
+#                     sensors.blink(1,0.1)
+#                     reset()
+#                     sensors.blink(1,0)
+#                     break
+#                 sensors.blink(1,0)
+#                 time.sleep(0.5)
+#     except Exception as e:
+#         print(f"An error occurred: {e}")
+#         import traceback
+#         traceback.print_exc()
+#         stop_event.set()
+#     finally:
+#         print("Exiting, joining processes...")
+#         GPIO.cleanup()
+#         stop_event.set() # Ensure all processes are signalled to stop
+#         for p in procs:
+#             if p.is_alive():
+#                 p.join(timeout=2) # Wait for processes to finish
+#             if p.is_alive():
+#                 print(f"Process {p.name} did not terminate, killing.")
+#                 p.kill() # Force kill if join times out
+#         print("All processes joined.")
 
-print("Exiting, joining processes...")
-GPIO.cleanup()
-stop_event.set() # Ensure all processes are signalled to stop
-for p in procs:
-    if p.is_alive():
-        p.join(timeout=2) # Wait for processes to finish
-    if p.is_alive():
-        print(f"Process {p.name} did not terminate, killing.")
-        p.kill() # Force kill if join times out
-print("All processes joined.")
+#         sensors.blink(1,0)
+#         time.sleep(0.5)
+
+# print("Exiting, joining processes...")
+# GPIO.cleanup()
+# stop_event.set() # Ensure all processes are signalled to stop
+# for p in procs:
+#     if p.is_alive():
+#         p.join(timeout=2) # Wait for processes to finish
+#     if p.is_alive():
+#         print(f"Process {p.name} did not terminate, killing.")
+#         p.kill() # Force kill if join times out
+# print("All processes joined.")
