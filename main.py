@@ -395,6 +395,7 @@ if __name__ == "__main__":
             stop_event.set()
         
         while True:
+            print(enters)
             if sensors.get_button():
                 print("restarting...")
                 sensors.blink(1,0.1)
@@ -403,6 +404,24 @@ if __name__ == "__main__":
                 break
             sensors.blink(1,0)
             time.sleep(0.5)
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        import traceback
+        traceback.print_exc()
+        stop_event.set()
+    finally:
+        print("Exiting, joining processes...")
+        GPIO.cleanup()
+        stop_event.set() # Ensure all processes are signalled to stop
+        for p in procs:
+            if p.is_alive():
+                p.join(timeout=2) # Wait for processes to finish
+            if p.is_alive():
+                print(f"Process {p.name} did not terminate, killing.")
+                p.kill() # Force kill if join times out
+        print("All processes joined.")
+
 
 print("Exiting, joining processes...")
 GPIO.cleanup()
@@ -414,3 +433,4 @@ for p in procs:
         print(f"Process {p.name} did not terminate, killing.")
         p.kill() # Force kill if join times out
 print("All processes joined.")
+>>>>>>> 968190b269dabd140a346fef892ce4fcc0559974
