@@ -4,7 +4,7 @@ import RPi.GPIO as GPIO
 from time import sleep
 #GPIO.setwarnings(False)
 
-
+# NOT USING THIS ONE
 #Pins for Motor Drivers
 motorA1 = 18
 motorA2 = 16

@@ -1,5 +1,7 @@
 # just make a lil api to have motors go for a bit
 
+# NOT USING THIS ONE
+
 import RPi.GPIO as GPIO
 import time
 from time import sleep
