@@ -4,11 +4,9 @@ import multiprocessing as mp
 
 from multiprocessing import Process, Queue, Event, set_start_method
 from FinalCode.Camera import producer
-from FinalCode.DetectRectColor import detector, consumer
-import multiprocessing.connection as connection
+from FinalCode.DetectRectColor import detector
 import time
 import numpy as np
-import heapq
 from position import position
 from movement import movement, output
 import asyncio
@@ -52,8 +50,8 @@ color_queue = Queue()
 stop_event      = Event()
 procs = [
     Process(target=producer, args=(frame_queue, stop_event)),
-    Process(target=detector, args=(frame_queue, annotated_queue, stop_event)),
-    Process(target=consumer, args=(annotated_queue, color_queue, stop_event)),
+    Process(target=detector, args=(frame_queue, color_queue, stop_event)),
+    # Process(target=consumer, args=(annotated_queue, color_queue, stop_event)),
 ]
 for p in procs: p.start()
 
@@ -99,10 +97,8 @@ def main():
             asyncio.run(movement.stop())
             deploy_kit() #TODO NOT IMPLEMENTED YET!!!
         
-        if mode == "WANDER":
-            wander()
-        elif mode == "EXPLORE":
-            explore()
+        if mode == "WANDER": wander()
+        elif mode == "EXPLORE": explore()
         elif mode == "NAVIGATE":
             navigate()
             if curr == HOME:
@@ -347,7 +343,6 @@ def update_visitedness(tile:position):
     if all(accessible[tile.coords()]!=-1): visited[tile.coords()] = 2 # All directions checked (are 0 or 1)
     elif any(accessible[tile.coords()]!=-1): visited[tile.coords()] = 1 # Some directions checked
     else: visited[tile.coords()] = 0 # No directions checked
-
 
 def deploy_kit():
     blinkers = asyncio.create_task(output.blink())
