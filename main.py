@@ -235,7 +235,7 @@ def check_passive():
     # just check on right and front
     front_distance, right_distance = sensors.get_distances()
     front_color = sensors.get_color()
-
+    
     assert front_color and front_distance and right_distance
     front = curr + OFFSETS[curr.dir]
     def rgb_to_hsv(rgb:tuple):
@@ -387,6 +387,7 @@ if __name__ == "__main__":
         try: set_start_method("spawn")
         except: pass
         print("wow so cool")
+        sensors.initialize_sensors()
         sensors.blink(2)
         main()
     except Exception as e:
