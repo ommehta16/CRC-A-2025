@@ -237,7 +237,8 @@ if __name__ == "__main__":
 
 
 		while True:		
-			read_hall_sensors()
+			print(get_distances())
+			#read_hall_sensors()
 			#get_color()
 	
 			if GPIO.input(buttonPin) == GPIO.HIGH:

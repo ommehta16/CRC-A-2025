@@ -382,7 +382,10 @@ def reset():
     print("SHIT")
 
 if __name__ == "__main__":
-    set_start_method("spawn")  # Required for Picamera2 multiprocessing
+    try:
+        set_start_method("spawn")  # Required for Picamera2 multiprocessing
+    except RuntimeError:
+        pass
     sensors.blink(2)
     try:
         try: main()
