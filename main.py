@@ -423,15 +423,8 @@ if __name__ == "__main__":
                 p.kill() # Force kill if join times out
         print("All processes joined.")
 
-            # print(enters)
-            if sensors.get_button():
-                print("restarting...")
-                sensors.blink(1,0.1)
-                reset()
-                sensors.blink(1,0)
-                break
-            sensors.blink(1,0)
-            time.sleep(0.5)
+        sensors.blink(1,0)
+        time.sleep(0.5)
 
 print("Exiting, joining processes...")
 GPIO.cleanup()
