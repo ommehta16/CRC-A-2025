@@ -15,6 +15,8 @@ import asyncio
 from collections import deque
 import sys
 import sensors
+import RPi.GPIO as GPIO
+
 
 TIME_INCREMENT:float = 0.5
 START:float          = time.time()
@@ -355,19 +357,21 @@ def deploy_kit():
     asyncio.run(asyncio.wait_for(blinkers, timeout=6))
 
 if __name__ == "__main__":
-    try: main()
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        import traceback
-        traceback.print_exc()
-        stop_event.set()
-    finally:
-        print("Exiting, joining processes...")
-        stop_event.set() # Ensure all processes are signalled to stop
-        for p in procs:
-            if p.is_alive():
-                p.join(timeout=2) # Wait for processes to finish
-            if p.is_alive():
-                print(f"Process {p.name} did not terminate, killing.")
-                p.kill() # Force kill if join times out
-        print("All processes joined.")
+    if GPIO.input(sensors.buttonPin) == GPIO.HIGH:
+        time.sleep(0.1)
+        try: main()
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            import traceback
+            traceback.print_exc()
+            stop_event.set()
+        finally:
+            print("Exiting, joining processes...")
+            stop_event.set() # Ensure all processes are signalled to stop
+            for p in procs:
+                if p.is_alive():
+                    p.join(timeout=2) # Wait for processes to finish
+                if p.is_alive():
+                    print(f"Process {p.name} did not terminate, killing.")
+                    p.kill() # Force kill if join times out
+            print("All processes joined.")
