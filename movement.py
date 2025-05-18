@@ -166,9 +166,9 @@ class movement:
 
     @staticmethod
     async def rotate(by:int) -> None: #TODO
-        movement.turn(by)
-        time.sleep(math.abs(by)*rotateTime)
-        movement.stop()
+        await movement.turn(by)
+        time.sleep(abs(by)*rotateTime)
+        await movement.stop()
         '''BRANDEN PLS IMPLEMENT THIS AS WELL'''
         #raise NotImplementedError()
         # just turn the bot by `by` 90 degree rotations (+3 --> 3 turns right, -3 --> 3 turns left)

@@ -53,7 +53,7 @@ def toggleLED():
 	global ledState
 	ledState = GPIO.LOW if ledState == GPIO.HIGH else GPIO.HIGH
 	GPIO.output(ledPin, ledState)
-	print("LED toggled")
+	#print("LED toggled")
 def blink(cnt=1, delay=0.5):
 	for i in range(cnt):
 		toggleLED()
@@ -96,7 +96,7 @@ def get_distances():
 	if tof1 and tof2:
 		d1 = tof1.range
 		d2 = tof2.range
-		print(f"Distance 1: {d1} mm, Distance 2: {d2} mm")
+		#print(f"Distance 1: {d1} mm, Distance 2: {d2} mm")
 		return d1, d2
 	else:
 		print("ToF sensors not initialized.")
@@ -105,7 +105,7 @@ def get_distances():
 def get_color():
 	if color_sensor:
 		r, g, b = color_sensor.color_rgb_bytes
-		print(f"Color: R={r}, G={g}, B={b}")
+		#print(f"Color: R={r}, G={g}, B={b}")
 		### more test code
 		'''
 		color_hex = rgb_to_hex(r, g, b)
@@ -120,7 +120,7 @@ def get_color():
 def get_accel():
 	if imu:
 		x,y,z = imu.acceleration
-		print(f"Acceleration (m/s^2): ({x:0.3f},{y:0.3f},{z:0.3f})")
+		#print(f"Acceleration (m/s^2): ({x:0.3f},{y:0.3f},{z:0.3f})")
 		return x, y, z
 	else:
 		print("IMU not initialized.")
@@ -150,7 +150,7 @@ def get_pitch():
 	# Calculate pitch
 	pitch_rad = math.atan2(-ax_corr, math.sqrt(ay_corr ** 2 + az_corr ** 2))
 	pitch_deg = math.degrees(pitch_rad)
-	print(pitch_deg)
+	#print(pitch_deg)
 	return pitch_deg
 
 
@@ -160,7 +160,7 @@ def get_pitch():
 def get_gyro():
 	if imu:
 		x,y,z = imu.gyro
-		print(f"Magnetometer (gauss): ({x:0.3f},{y:0.3f},{z:0.3f})")		
+		#print(f"Magnetometer (gauss): ({x:0.3f},{y:0.3f},{z:0.3f})")		
 		return x, y, z
 	else:
 		print("IMU not initialized.")
@@ -211,10 +211,12 @@ def read_hall_sensors():
 	else:
 		print("Hall Sensor 1: No magnet")
 	'''
+	'''
 	if hall2 == GPIO.LOW:
 		print("Hall Sensor 2: Magnet detected")
 	else:
 		print("Hall Sensor 2: No magnet")
+		'''
 	return hall2 #,hall1
 def get_button():
 	if GPIO.input(buttonPin)==GPIO.HIGH:
@@ -223,7 +225,7 @@ def get_button():
 if __name__ == "__main__":
 	try:
 		initialize_sensors()
-		'''
+		
 		while not i2c.try_lock():
 			pass
 		print("runs")
@@ -232,15 +234,15 @@ if __name__ == "__main__":
 			print("I2C addresses found:", [hex(address) for address in devices])
 		finally:
 			i2c.unlock()
-		'''
+		
 
 
 
 		while True:		
 			#print(get_distances())
-			read_hall_sensors()
+			#read_hall_sensors()
 			#get_color()
-			print(get_pitch())
+			#print(get_pitch())
 			if GPIO.input(buttonPin) == GPIO.HIGH:
 				blink()
 				get_pitch()
