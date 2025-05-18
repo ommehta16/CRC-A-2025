@@ -1,7 +1,4 @@
 print("starting...")
-# from sensors import color, distance
-import multiprocessing as mp
-
 from multiprocessing import Process, Queue, Event, set_start_method
 from FinalCode.Camera import producer
 from FinalCode.DetectRectColor import detector
@@ -11,8 +8,8 @@ from position import position
 from movement import movement, output
 import asyncio
 from collections import deque
-import sys
 import sensors
+import sys
 
 TIME_INCREMENT:float = 0.5
 START:float          = time.time()
@@ -92,6 +89,7 @@ def main():
     while True:
         now:float = time.time()
         # grab color data from consumer here
+        if sensors.get_button(): return #close if the button is pressed
         while not color_queue.empty():
             print(color_queue.get()) # the color is _only_ important for debug purposes
             asyncio.run(movement.stop())
@@ -349,26 +347,39 @@ def deploy_kit():
     output.eject()
     asyncio.run(asyncio.wait_for(blinkers, timeout=6))
 
+def reset():
+    global mode, accessible, visited, ramps
+    mode = "WANDER"
+    accessible = np.zeros((GRID_SIZE[0],GRID_SIZE[1],GRID_SIZE[2],4)).astype(int)
+    accessible-=1
+    visited = np.zeros(GRID_SIZE).astype(int)
+    ramps = set()
+    print("SHIT")
+
 if __name__ == "__main__":
-        sensors.blink(2)
-        if sensors.get_button():
+    try:
+        try: main()
+        except Exception as e: reset()
+        while True:
+            if sensors.get_button():
+                sensors.blink(10,0.1)
+                try: main()
+                except: reset()
             sensors.blink(2)
-        elif False:
-            time.sleep(0.1)
-            
-            try: main()
-            except Exception as e:
-                print(f"An error occurred: {e}")
-                import traceback
-                traceback.print_exc()
-                stop_event.set()
-            finally:
-                print("Exiting, joining processes...")
-                stop_event.set() # Ensure all processes are signalled to stop
-                for p in procs:
-                    if p.is_alive():
-                        p.join(timeout=2) # Wait for processes to finish
-                    if p.is_alive():
-                        print(f"Process {p.name} did not terminate, killing.")
-                        p.kill() # Force kill if join times out
-                print("All processes joined.")
+            time.sleep(0.5)
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        import traceback
+        traceback.print_exc()
+        stop_event.set()
+        sys.exit(1)
+    finally:
+        print("Exiting, joining processes...")
+        stop_event.set() # Ensure all processes are signalled to stop
+        for p in procs:
+            if p.is_alive():
+                p.join(timeout=2) # Wait for processes to finish
+            if p.is_alive():
+                print(f"Process {p.name} did not terminate, killing.")
+                p.kill() # Force kill if join times out
+        print("All processes joined.")

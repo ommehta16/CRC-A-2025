@@ -54,12 +54,12 @@ def toggleLED():
 	ledState = GPIO.LOW if ledState == GPIO.HIGH else GPIO.HIGH
 	GPIO.output(ledPin, ledState)
 	print("LED toggled")
-def blink(cnt=1):
+def blink(cnt=1, delay=0.5):
 	for i in range(cnt):
 		toggleLED()
-		time.sleep(0.5)
+		time.sleep(delay)
 		toggleLED()
-		time.sleep(0.5)
+		time.sleep(delay)
 			
 
 def initialize_sensors():
