@@ -142,10 +142,10 @@ def get_pitch():
 		accel_offset_initialized = True
 
 	# Apply offset correction
-	'''
-	ax_corr = ax - 0#accel_offset[0]
-	ay_corr = ay - 0#accel_offset[1]
-	az_corr = az - 0#accel_offset[2]
+	'''#this is manually added
+	ax_corr = ax + 0.9#accel_offset[0]
+	ay_corr = ay + 0.11#accel_offset[1]
+	az_corr = az - 0.09#accel_offset[2]
 
 	# Calculate pitch
 	pitch_rad = math.atan2(-ax_corr, math.sqrt(ay_corr ** 2 + az_corr ** 2))
@@ -237,10 +237,10 @@ if __name__ == "__main__":
 
 
 		while True:		
-			print(get_distances())
+			#print(get_distances())
 			#read_hall_sensors()
 			#get_color()
-	
+			print(get_pitch())
 			if GPIO.input(buttonPin) == GPIO.HIGH:
 				blink()
 				get_pitch()
