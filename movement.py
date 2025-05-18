@@ -120,18 +120,31 @@ class movement:
         driveSpeed = to
 
     @staticmethod
-    async def move_tiles(n:int=1) -> int:
+    async def move_tiles(n:int=1) -> int: #TODO
         '''BRANDEN PLS IMPLEMENT THIS!!!'''
         raise NotImplementedError()
-        # moves n tiles forwards, then *reports the vertical change*
+        # moves n tiles forwards, then *reports the vertical change* as a proportion of 25cm
+        # This should literally just move the robot n tiles laterally forwards. It MUST adjust 
+        # for inclines, and (should? idk if it has to ?) adjust for speed bumps to avoid us losing 
+        # accuracy. 
+        # 
+        # (Accuracy losses build up because I *didn't add a recalbration for position in main*.)
+        #  ^^ You can try to ask chat for this, but like 50/50 chance it blows up the rest of it so idk :shrug:
         return 0
 
     @staticmethod
-    async def rotate(by:int) -> None:
+    async def rotate(by:int) -> None: #TODO
         '''BRANDEN PLS IMPLEMENT THIS AS WELL'''
-        
+        raise NotImplementedError()
         # just turn the bot by `by` 90 degree rotations (+3 --> 3 turns right, -3 --> 3 turns left)
-        #
+        # 
+        # 
+        # 
+        # Turns 90 degrees right `by` times. If `by` is negative, it turns left |by| times. If by
+        # is positive, it turns right |by| times. Preferrably, the `by` 90 degree turns would be one,
+        # fluid action (i.e. to turn 180 degrees left, we go directly to 180 instead of pausing at 90).
+        # 
+        # Optionally, you can do some math to ensure that we never make unnecessarily big rotations
 class output:
     @staticmethod
     async def blink():
@@ -139,6 +152,11 @@ class output:
     @staticmethod
     def eject(): #TODO
         '''Eject 1 package from the mag'''
+        raise NotImplementedError()
+    
+        '''
+        
+        '''
 
 
 def test():
