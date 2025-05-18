@@ -25,6 +25,8 @@ OFFSETS = [
     [-1,0],
 ]
 
+water = set()
+
 HOME = position(50,50,0,0)
 
 visited = np.zeros(GRID_SIZE).astype(int)
@@ -232,9 +234,25 @@ def check_passive():
     # just check on right and front
     front_distance, right_distance = sensors.get_distances()
     front_color = sensors.get_color()
+
     assert front_color and front_distance and right_distance
     front = curr + OFFSETS[curr.dir]
+    def rgb_to_hsv(rgb:tuple):
+        r,g,b = rgb
+        r/=255; g/=255; b/=255
+        hue = -1
+        delta = max(r,g,b)-min(r,g,b)
+        if max(r,g,b) == r: hue = ((g-b)/delta) % 6
+        elif max(r,g,b) == g: hue = ((b-r)/delta)+2
+        else: hue=((r-g)/delta)+4
+        hue *= 60
+        sat = (max(r,g,b)-min(r,g,b))/max(r,g,b)
 
+        return hue,sat, max(r,g,b)
+    
+    h,s,v = rgb_to_hsv(front_color)
+    if h<=250 and 200<=h and s>0.5 and v>0.5:
+        water.add(front)
     if max(front_color) < 20: # it is black
         accessible[(*curr.coords(),curr.dir)] = 0
         accessible[(*front.coords(),(2+curr.dir)%4)] = 0
@@ -312,6 +330,10 @@ def visit(dest:position):
     curr.z += delta_height
     # ^^ if we realize that we did a ramp, these get overwritten
 
+    if curr in water:
+        print("IM SO WET RN")
+        time.sleep(5)
+
     # Ramp Detection
     if round(curr.z) != round(start.z):
         print(f'''
@@ -344,9 +366,8 @@ def update_visitedness(tile:position):
     else: visited[tile.coords()] = 0 # No directions checked
 
 def deploy_kit():
-    blinkers = asyncio.create_task(output.blink())
     output.eject()
-    asyncio.run(asyncio.wait_for(blinkers, timeout=6))
+    asyncio.run(output.blink())
 
 def reset():
     global mode, accessible, visited, ramps

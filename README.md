@@ -6,8 +6,6 @@ all things for CRC Esoteric Engineering in 2025
 
 - `movement.py -> rotate(by:int)`
 - `movement.py -> move_tiles()`
-- `movement.py -> rotate(by:int)`
-- `movement.py -> blink()`
 - `movement.py -> eject()`
 - OCR
 
