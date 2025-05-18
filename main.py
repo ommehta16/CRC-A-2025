@@ -351,9 +351,12 @@ def deploy_kit():
 def reset():
     global mode, accessible, visited, ramps
     mode = "WANDER"
-    accessible = np.zeros((GRID_SIZE[0],GRID_SIZE[1],GRID_SIZE[2],4)).astype(int)
-    accessible-=1
-    visited = np.zeros(GRID_SIZE).astype(int)
+    sensors.blink(10,0.1)
+    time.sleep(10)
+    # accessible = np.zeros((GRID_SIZE[0],GRID_SIZE[1],GRID_SIZE[2],4)).astype(int)
+    # accessible-=1
+    # visited = np.zeros(GRID_SIZE).astype(int)
+    sensors.blink(10,0.1)
     ramps = set()
     print("SHIT")
 
