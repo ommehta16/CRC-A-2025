@@ -165,10 +165,10 @@ def test():
     asyncio.run(movement.stop())
 
     print("forwards")
-    asyncio.create_task(movement.drive(1))
     time.sleep(1)
     print("stop")
     asyncio.run(movement.stop())
+    
 def test2():
     asyncio.run(movement.drive())
     while True:

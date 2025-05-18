@@ -367,18 +367,20 @@ if __name__ == "__main__":
         pass
     sensors.blink(2)
     try:
+        try: main()
+        except Exception as e: reset()
         while True:
             if sensors.get_button():
                 sensors.blink(10,0.1)
                 try: main()
                 except: reset()
+            sensors.blink(2)
             time.sleep(0.5)
     except Exception as e:
         print(f"An error occurred: {e}")
         import traceback
         traceback.print_exc()
         stop_event.set()
-        sys.exit(1)
     finally:
         print("Exiting, joining processes...")
         GPIO.cleanup()
